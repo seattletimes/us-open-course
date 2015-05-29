@@ -1,0 +1,40 @@
+{
+  "name": "us-open",
+  "description": "A 3D flythrough of the US Open course at Chambers Bay",
+  "version": "0.0.1",
+  "author": "Thomas Wilburn",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/seattletimes/us-open.git"
+  },
+  "dependencies": {
+    "async": "^0.9.0",
+    "aws-sdk": "^2.1.25",
+    "babelify": "^6.0.2",
+    "browserify": "^9.0.8",
+    "chalk": "^1.0.0",
+    "commonmark": "^0.18.2",
+    "component-responsive-frame": "^1.0.6",
+    "csv": "^0.4.2",
+    "exorcist": "^0.3.0",
+    "google-spreadsheets": "^0.4.1",
+    "grunt": "^0.4.5",
+    "grunt-contrib-connect": "^0.10.1",
+    "grunt-contrib-watch": "^0.6.1",
+    "less": "^2.0.0",
+    "mime": "^1.2.11",
+    "shelljs": "^0.4.0",
+    "three": "^0.71.0",
+    "through2": "^0.6.3",
+    "typogr": "^0.6.4"
+  },
+  "browser": {
+    "share": "./src/js/lib/share.min.js"
+  },
+  "browserify": {
+    "transform": [
+      "./tasks/lib/browserify-less",
+      "./tasks/lib/browserify-text"
+    ]
+  }
+}
