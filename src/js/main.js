@@ -13,9 +13,11 @@ window.THREE = three;
 // require("./ColladaLoader.js");
 
 var scene = new three.Scene();
-var camera = new three.PerspectiveCamera(60, 16 / 9, 0.1, 1000);
+var camera = new three.PerspectiveCamera(10, 16 / 9, 0.1, 1000);
 
-camera.position.y = 20;
+camera.position.y = 100;
+camera.position.x = 0;
+camera.position.z = -100;
 
 var scaleDown = .8;
 var renderer = new three.WebGLRenderer();
@@ -51,17 +53,12 @@ loader.load("./assets/model.json", function(object) {
 
 });
 
-var box = new three.SphereGeometry(1, 16, 16);
-var material = new three.MeshPhongMaterial({ color: 0x888888 });
-material.shading = three.FlatShading;
-var cube = new three.Mesh(box, material);
-cube.position.y = .6;
-cube.position.z = 200;
-cube.visible = false;
-
-scene.add(cube);
-
-window.cube = cube;
+var sphere = new three.SphereGeometry(1, 16, 16);
+var white = new three.MeshPhongMaterial({ color: 0x888888 });
+white.shading = three.FlatShading;
+var red = new three.MeshPhongMaterial({ color: 0x883333 });
+red.shading = three.FlatShading;
+var spike = new three.TetrahedronGeometry(1, 0);
 
 var ambience = new three.AmbientLight(0xFFFFFF);
 scene.add(ambience);
@@ -71,19 +68,31 @@ sun.position.set(0, 4, 2);
 // var sun = new three.HemisphereLight(0xFFFFFF, 0x003355, .6);
 scene.add(sun);
 
-var counter = .01;
+var poiMap = {};
 
-var stats = document.querySelector(".stats");
+var poi = require("./poi");
+poi.course.forEach(function(point) {
+  var ball = new three.Mesh(sphere, white);
+  ball.position.set(...point.hole);
+  scene.add(ball);
+  var tee = new three.Mesh(spike, red);
+  tee.position.set(...point.tee);
+  scene.add(tee);
+  poiMap[point.id] = {
+    ball: ball,
+    data: point
+  };
+});
 
+var counter = 0;
 var renderLoop = function() {
   renderer.render(scene, camera);
-  cube.rotation.x += .01;
-  cube.rotation.y += .01;
-  counter += .005;
-  camera.position.x = Math.sin(counter) * 200;
-  camera.position.z = Math.cos(counter) * 200;
-  camera.lookAt(cube.getWorldPosition());
+  counter += 0.05
+  camera.position.x = Math.sin(counter) * 400;
+  camera.position.z = Math.cos(counter) * 400;
+  camera.lookAt(poiMap[5].ball.getWorldPosition());
   nextTick(renderLoop);
+  // setTimeout(renderLoop, 1000);
 };
 
 window.camera = camera;
