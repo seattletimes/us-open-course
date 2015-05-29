@@ -58,7 +58,7 @@ var white = new three.MeshPhongMaterial({ color: 0x888888 });
 white.shading = three.FlatShading;
 var red = new three.MeshPhongMaterial({ color: 0x883333 });
 red.shading = three.FlatShading;
-var spike = new three.TetrahedronGeometry(1, 0);
+var spike = new three.CylinderGeometry(1, 0, 3, 4, 4);
 
 var ambience = new three.AmbientLight(0xFFFFFF);
 scene.add(ambience);
@@ -87,7 +87,7 @@ poi.course.forEach(function(point) {
 var counter = 0;
 var renderLoop = function() {
   renderer.render(scene, camera);
-  counter += 0.05
+  counter += 0.005
   camera.position.x = Math.sin(counter) * 400;
   camera.position.z = Math.cos(counter) * 400;
   camera.lookAt(poiMap[5].ball.getWorldPosition());
