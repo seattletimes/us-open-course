@@ -15,7 +15,7 @@ window.THREE = three;
 var scene = new three.Scene();
 var camera = new three.PerspectiveCamera(60, 16 / 9, 0.1, 1000);
 
-camera.position.y = 0;
+camera.position.y = 20;
 
 var scaleDown = .8;
 var renderer = new three.WebGLRenderer();
@@ -56,6 +56,7 @@ var material = new three.MeshPhongMaterial({ color: 0x888888 });
 material.shading = three.FlatShading;
 var cube = new three.Mesh(box, material);
 cube.position.y = .6;
+cube.position.z = 200;
 cube.visible = false;
 
 scene.add(cube);
@@ -79,8 +80,8 @@ var renderLoop = function() {
   cube.rotation.x += .01;
   cube.rotation.y += .01;
   counter += .005;
-  camera.position.x = Math.sin(counter) * 100;
-  camera.position.z = Math.cos(counter) * 100;
+  camera.position.x = Math.sin(counter) * 200;
+  camera.position.z = Math.cos(counter) * 200;
   camera.lookAt(cube.getWorldPosition());
   nextTick(renderLoop);
 };
