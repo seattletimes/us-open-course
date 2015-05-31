@@ -10,14 +10,7 @@ var nextTick = window.requestAnimationFrame ?
 
 var three = require("three");
 window.THREE = three;
-// require("./ColladaLoader.js");
-
 var scene = new three.Scene();
-var camera = new three.PerspectiveCamera(70, 16 / 9, 0.1, 1000);
-
-camera.position.y = 30;
-camera.position.x = 0;
-camera.position.z = -100;
 
 var scaleDown = .8;
 var renderer = new three.WebGLRenderer();
@@ -88,8 +81,21 @@ poi.course.forEach(function(point) {
 
 var focus = new three.Mesh(sphere, red);
 // focus.visible = false;
-
 scene.add(focus);
+
+require("./targetCam");
+var camera = new three.TargetCamera(70, 16 / 9, 0.1, 1000);
+
+camera.addTarget({
+  name: "focus",
+  targetObject: focus,
+  fixed: false,
+  matchRotation: false,
+  cameraPosition: new three.Vector3(0, 20, 60),
+  stiffness: 0.1
+});
+camera.setTarget("focus");
+
 
 var tweenjs = require("tween.js");
 var tween = null;
@@ -140,9 +146,7 @@ var renderLoop = function() {
   tweenjs.update();
   renderer.render(scene, camera);
   counter += 0.005;
-  camera.position.x = Math.sin(counter) * 100;
-  camera.position.z = Math.cos(counter) * 100;
-  camera.lookAt(focus.getWorldPosition());
+  camera.update();
   nextTick(renderLoop);
   // setTimeout(renderLoop, 1000);
 };
