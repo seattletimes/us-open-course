@@ -13,9 +13,9 @@ window.THREE = three;
 // require("./ColladaLoader.js");
 
 var scene = new three.Scene();
-var camera = new three.PerspectiveCamera(10, 16 / 9, 0.1, 1000);
+var camera = new three.PerspectiveCamera(70, 16 / 9, 0.1, 1000);
 
-camera.position.y = 100;
+camera.position.y = 30;
 camera.position.x = 0;
 camera.position.z = -100;
 
@@ -59,6 +59,7 @@ white.shading = three.FlatShading;
 var red = new three.MeshPhongMaterial({ color: 0x883333 });
 red.shading = three.FlatShading;
 var spike = new three.CylinderGeometry(1, 0, 3, 4, 4);
+var gold = new three.MeshPhongMaterial({ color: 0xAA8800 });
 
 var ambience = new three.AmbientLight(0xFFFFFF);
 scene.add(ambience);
@@ -80,17 +81,68 @@ poi.course.forEach(function(point) {
   scene.add(tee);
   poiMap[point.id] = {
     ball: ball,
-    data: point
+    data: point,
+    tee: tee
   };
 });
 
+var focus = new three.Mesh(sphere, red);
+// focus.visible = false;
+
+scene.add(focus);
+
+var tweenjs = require("tween.js");
+var tween = null;
+var previous = null;
+
+var moveFocus = function() {
+  focus.position.set(this.x, this.y, this.z);
+};
+
+var goto = function(id) {
+  // console.log(id, poiMap[id]);
+  var point = poiMap[id];
+  if (previous) {
+    previous.ball.material = white;
+    previous.tee.material = red;
+  }
+  previous = point;
+  point.ball.material = gold;
+  point.tee.material = gold;
+  var ball = point.ball.position;
+  var tee = point.tee.position;
+  var midpoint = {
+    x: (tee.x + ball.x) / 2,
+    y: (tee.y + ball.y) / 2,
+    z: (tee.z + ball.z) / 2
+  };
+  var current = {
+    x: focus.position.x,
+    y: focus.position.y,
+    z: focus.position.z
+  };
+  if (tween) tween.stop();
+  tween = new tweenjs.Tween(current).to(midpoint, 1000)
+  tween.start();
+  tween.onUpdate(moveFocus);
+};
+
+var current = 0;
+var shift = function() {
+  goto((current++ % 18) + 1);
+  setTimeout(shift, 2000);
+};
+
+shift();
+
 var counter = 0;
 var renderLoop = function() {
+  tweenjs.update();
   renderer.render(scene, camera);
-  counter += 0.005
-  camera.position.x = Math.sin(counter) * 400;
-  camera.position.z = Math.cos(counter) * 400;
-  camera.lookAt(poiMap[5].ball.getWorldPosition());
+  counter += 0.005;
+  camera.position.x = Math.sin(counter) * 100;
+  camera.position.z = Math.cos(counter) * 100;
+  camera.lookAt(focus.getWorldPosition());
   nextTick(renderLoop);
   // setTimeout(renderLoop, 1000);
 };
