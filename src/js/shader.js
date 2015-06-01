@@ -55,8 +55,6 @@ void main() {
   vec3 outgoingLight = vec3(0.0);
 
 ${three.ShaderChunk.logdepthbuf_fragment}
-${three.ShaderChunk.alphamap_fragment}
-${three.ShaderChunk.alphatest_fragment}
 ${three.ShaderChunk.specularmap_fragment}
 
   outgoingLight += diffuseColor.rgb * vLightFront;

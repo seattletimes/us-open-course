@@ -21,7 +21,7 @@ module.exports = function(scene, ready) {
     mesh.position.set(0, -20, 0);
     mesh.geometry = new three.BufferGeometry().fromGeometry(mesh.geometry);
     mesh.geometry.computeBoundingBox();
-    mesh.geometry.computeVertexNormals();
+    // mesh.geometry.computeVertexNormals();
     var bounds = mesh.geometry.boundingBox;
     window.ground = mesh;
     scene.add(mesh);
@@ -34,6 +34,7 @@ module.exports = function(scene, ready) {
         three.UniformsLib.common,
         three.UniformsLib.fog,
         three.UniformsLib.lights,
+        three.UniformsLib.shadowmap,
         {
           u_minBounds: { type: "v3", value: new three.Vector3(bounds.min.x, bounds.min.y, bounds.min.z) },
           u_maxBounds: { type: "v3", value: new three.Vector3(bounds.max.x, bounds.max.y, bounds.max.z) }

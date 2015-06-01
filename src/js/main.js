@@ -2,34 +2,29 @@
 // require("./lib/social");
 // require("./lib/ads");
 
+var three = require("three");
+var tweenjs = require("tween.js");
+require("./targetCam");
+
 const SKY_COLOR = 0xBBBBEE;
 
 var nextTick = window.requestAnimationFrame ? 
   window.requestAnimationFrame.bind(window) :
   function(f) { setTimeout(f, 10) };
 
-var three = require("three");
 window.THREE = three;
 var scene = new three.Scene();
 scene.fog = new three.Fog(SKY_COLOR, 100, 500);
 
-var scaleDown = 1;//.8;
 var canvas = document.querySelector(".renderer");
 var renderer = new three.WebGLRenderer({
-  canvas: canvas
+  canvas: canvas,
+  alpha: false,
+  antialias: true
 });
 renderer.setSize(canvas.offsetWidth, canvas.offsetHeight, false);
 renderer.setClearColor(SKY_COLOR);
 window.addEventListener("resize", () => renderer.setSize(canvas.offsetWidth, canvas.offsetHeight, false));
-
-var sphere = new three.SphereGeometry(1, 16, 16);
-var white = new three.MeshLambertMaterial({ color: 0x888888 });
-white.shading = three.FlatShading;
-var red = new three.MeshLambertMaterial({ color: 0x552222 });
-red.shading = three.FlatShading;
-var spike = new three.CylinderGeometry(1, 0, 3, 9, 4);
-var gold = new three.MeshLambertMaterial({ color: 0xAA8800 });
-var green = new three.MeshLambertMaterial({ color: 0x446622 });
 
 var ambience = new three.AmbientLight(0x404040);
 scene.add(ambience);
@@ -38,14 +33,31 @@ var sun = new three.DirectionalLight(0x888888, 4);
 sun.position.set(0, 60, 60);
 scene.add(sun);
 
-var poiMap = {};
+var materials = {
+  white: 0x888888,
+  red: 0x552222,
+  gold: 0xAA8800,
+  green: 0x446622
+};
 
-var poi = require("./poi");
-poi.course.forEach(function(point) {
-  var ball = new three.Mesh(sphere, white);
+for (var key in materials) {
+  materials[key] = new three.MeshLambertMaterial({
+    color: materials[key],
+    emissive: 0x222222,
+    shading: three.SmoothShading,
+    fog: true
+  });
+}
+
+var sphere = new three.SphereGeometry(1, 16, 16);
+var spike = new three.CylinderGeometry(1, 0, 3, 9, 4);
+
+var poiMap = {};
+require("./poi").course.forEach(function(point) {
+  var ball = new three.Mesh(sphere, materials.white);
   ball.position.set(...point.hole);
   scene.add(ball);
-  var tee = new three.Mesh(spike, red);
+  var tee = new three.Mesh(spike, materials.red);
   tee.position.set(...point.tee);
   scene.add(tee);
   poiMap[point.id] = {
@@ -55,11 +67,10 @@ poi.course.forEach(function(point) {
   };
 });
 
-var focus = new three.Mesh(sphere, green);
+var focus = new three.Mesh(sphere, materials.green);
 // focus.visible = false;
 scene.add(focus);
 
-require("./targetCam");
 var camera = new three.TargetCamera(70, 16 / 9, 0.1, 1000);
 
 camera.addTarget({
@@ -72,8 +83,6 @@ camera.addTarget({
 });
 camera.setTarget("focus");
 
-
-var tweenjs = require("tween.js");
 var tween = null;
 var previous = null;
 
@@ -85,12 +94,12 @@ var goto = function(id) {
   // console.log(id, poiMap[id]);
   var point = poiMap[id];
   if (previous) {
-    previous.ball.material = white;
-    previous.tee.material = red;
+    previous.ball.material = materials.white;
+    previous.tee.material = materials.red;
   }
   previous = point;
-  point.ball.material = gold;
-  point.tee.material = gold;
+  point.ball.material = materials.gold;
+  point.tee.material = materials.gold;
   var ball = point.ball.position;
   var tee = point.tee.position;
   var midpoint = {
@@ -119,11 +128,9 @@ var shift = function() {
 var counter = 0;
 var renderLoop = function() {
   tweenjs.update();
-  renderer.render(scene, camera);
-  counter += 0.005;
   camera.update();
+  renderer.render(scene, camera);
   nextTick(renderLoop);
-  // setTimeout(renderLoop, 1000);
 };
 
 document.body.classList.add("loading");
