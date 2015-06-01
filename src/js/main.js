@@ -17,7 +17,7 @@ var renderer = new three.WebGLRenderer();
 document.querySelector(".render-container").appendChild(renderer.domElement);
 renderer.setSize(renderer.domElement.offsetWidth * scaleDown, renderer.domElement.offsetHeight * scaleDown);
 renderer.domElement.setAttribute("style", "");
-renderer.setClearColor(0xEEEEFF);
+renderer.setClearColor(0xBBBBEE);
 
 var sphere = new three.SphereGeometry(1, 16, 16);
 var white = new three.MeshPhongMaterial({ color: 0x888888 });
@@ -64,7 +64,7 @@ camera.addTarget({
   targetObject: focus,
   fixed: false,
   matchRotation: false,
-  cameraPosition: new three.Vector3(0, 20, 80),
+  cameraPosition: new three.Vector3(-80, 20, 20),
   stiffness: 0.01
 });
 camera.setTarget("focus");
