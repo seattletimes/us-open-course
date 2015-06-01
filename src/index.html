@@ -9,7 +9,11 @@
   </head>
   <body>
 
-    <div class="stats"></div>
+    <nav>
+      <% for (var i = 1; i <= 18; i++) { %>
+      <a href="javascript:;" class="go-to" data-link="<%= i %>"><%= i %></a>
+      <% } %>
+    </nav>
     <div class="aspect-outer">
       <div class="aspect-inner render-container">
         <canvas class="renderer"></canvas>

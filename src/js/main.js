@@ -24,7 +24,7 @@ var white = new three.MeshLambertMaterial({ color: 0x888888 });
 white.shading = three.FlatShading;
 var red = new three.MeshLambertMaterial({ color: 0x552222 });
 red.shading = three.FlatShading;
-var spike = new three.CylinderGeometry(1, 0, 3, 4, 4);
+var spike = new three.CylinderGeometry(1, 0, 3, 9, 4);
 var gold = new three.MeshLambertMaterial({ color: 0xAA8800 });
 var green = new three.MeshLambertMaterial({ color: 0x446622 });
 
@@ -128,7 +128,13 @@ var init = require("./init");
 init(scene, function() {
   document.body.classList.remove("loading");
   renderLoop();
-  shift();
+  goto(1);
+});
+
+document.body.addEventListener("click", function(e) {
+  if (!e.target.classList.contains("go-to")) return;
+  var id = e.target.getAttribute("data-link");
+  goto(id);
 });
 
 window.camera = camera;
