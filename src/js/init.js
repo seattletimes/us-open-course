@@ -46,7 +46,6 @@ module.exports = function(scene, ready) {
     });
     //three's merge clobbers our texture for some reason, add it manually
     shader.uniforms.u_texture = { type: "t", value: loaded.texture };
-    console.log(shader.uniforms);
     mesh.material = shader;
     
     if (ready) ready();

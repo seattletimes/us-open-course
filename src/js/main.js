@@ -67,7 +67,7 @@ camera.addTarget({
   targetObject: focus,
   fixed: false,
   matchRotation: false,
-  cameraPosition: new three.Vector3(-80, 20, 20),
+  cameraPosition: new three.Vector3(-40, 20, 40),
   stiffness: 0.01
 });
 camera.setTarget("focus");
