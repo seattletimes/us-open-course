@@ -123,8 +123,10 @@ var renderLoop = function() {
   // setTimeout(renderLoop, 1000);
 };
 
+document.body.classList.add("loading");
 var init = require("./init");
 init(scene, function() {
+  document.body.classList.remove("loading");
   renderLoop();
   shift();
 });

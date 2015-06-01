@@ -1,8 +1,8 @@
 {
   "s3": {
     "stage": {
-      "bucket": "",
-      "path": ""
+      "bucket": "apps-stage.seattletimesdata.com",
+      "path": "incomprehensible-continent"
     },
     "live": {
       "bucket": "",

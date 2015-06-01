@@ -7,6 +7,30 @@
 
 @import "seattletimes";
 
+.render-container {
+  &::before {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    display: block;
+    color: white;
+    z-index: 999;
+    display: none;
+
+    .loading & {
+      display: block;
+      content: "Loading...";
+    }
+
+    .waiting & {
+      display: block;
+      content: "Click to load experience";
+    }
+  }
+}
+
 .aspect-outer {
   max-width: 100%;
   width: 1000px;
