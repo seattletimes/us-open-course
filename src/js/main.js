@@ -2,6 +2,8 @@
 // require("./lib/social");
 // require("./lib/ads");
 
+const SKY_COLOR = 0xBBBBEE;
+
 var nextTick = window.requestAnimationFrame ? 
   window.requestAnimationFrame.bind(window) :
   function(f) { setTimeout(f, 10) };
@@ -9,6 +11,7 @@ var nextTick = window.requestAnimationFrame ?
 var three = require("three");
 window.THREE = three;
 var scene = new three.Scene();
+scene.fog = new three.Fog(SKY_COLOR, 100, 500);
 
 var scaleDown = 1;//.8;
 var canvas = document.querySelector(".renderer");
@@ -16,7 +19,7 @@ var renderer = new three.WebGLRenderer({
   canvas: canvas
 });
 renderer.setSize(canvas.offsetWidth, canvas.offsetHeight, false);
-renderer.setClearColor(0xBBBBEE);
+renderer.setClearColor(SKY_COLOR);
 window.addEventListener("resize", () => renderer.setSize(canvas.offsetWidth, canvas.offsetHeight, false));
 
 var sphere = new three.SphereGeometry(1, 16, 16);
@@ -28,11 +31,11 @@ var spike = new three.CylinderGeometry(1, 0, 3, 9, 4);
 var gold = new three.MeshLambertMaterial({ color: 0xAA8800 });
 var green = new three.MeshLambertMaterial({ color: 0x446622 });
 
-var ambience = new three.AmbientLight(0xFFFFFF);
+var ambience = new three.AmbientLight(0x404040);
 scene.add(ambience);
 
-var sun = new three.DirectionalLight(0x888888, 2);
-sun.position.set(0, 4, 2);
+var sun = new three.DirectionalLight(0x888888, 4);
+sun.position.set(0, 60, 60);
 scene.add(sun);
 
 var poiMap = {};
@@ -128,7 +131,7 @@ var init = require("./init");
 init(scene, function() {
   document.body.classList.remove("loading");
   renderLoop();
-  goto(1);
+  goto(12);
 });
 
 document.body.addEventListener("click", function(e) {

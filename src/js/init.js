@@ -30,14 +30,23 @@ module.exports = function(scene, ready) {
 
     var shaders = require("./shader");
     var shader = new three.ShaderMaterial({
-      uniforms: {
-        u_texture: { type: "t", value: loaded.texture },
-        u_minBounds: { type: "v3", value: new three.Vector3(bounds.min.x, bounds.min.y, bounds.min.z) },
-        u_maxBounds: { type: "v3", value: new three.Vector3(bounds.max.x, bounds.max.y, bounds.max.z) }
-      },
+      uniforms: three.UniformsUtils.merge([
+        three.UniformsLib.common,
+        three.UniformsLib.fog,
+        three.UniformsLib.lights,
+        {
+          u_minBounds: { type: "v3", value: new three.Vector3(bounds.min.x, bounds.min.y, bounds.min.z) },
+          u_maxBounds: { type: "v3", value: new three.Vector3(bounds.max.x, bounds.max.y, bounds.max.z) }
+        },
+      ]),
       fragmentShader: shaders.fragment,
-      vertexShader: shaders.vertex
+      vertexShader: shaders.vertex,
+      fog: true,
+      lights: true
     });
+    //three's merge clobbers our texture for some reason, add it manually
+    shader.uniforms.u_texture = { type: "t", value: loaded.texture };
+    console.log(shader.uniforms);
     mesh.material = shader;
     
     if (ready) ready();
