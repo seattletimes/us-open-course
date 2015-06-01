@@ -1,6 +1,7 @@
 var three = require("three");
 
 var vert = `
+//TERRAIN VERTEX SHADER
 varying vec3 v_coord;
 varying vec4 v_normal;
 
@@ -11,20 +12,28 @@ void main() {
 }`;
 
 var frag = `
+//TERRAIN FRAGMENT SHADER
 uniform vec3 u_minBounds;
 uniform vec3 u_maxBounds;
 uniform sampler2D u_texture;
 varying vec3 v_coord;
 varying vec4 v_normal;
 
+
 void main() {
+  vec3 modelSpace = (v_coord - u_minBounds) / (u_maxBounds - u_minBounds);
+  vec4 color = texture2D(u_texture, vec2(modelSpace.x, 1.0 - modelSpace.z));
+
   float shadow = 0.3;
-  vec3 internal = (v_coord - u_minBounds) / (u_maxBounds - u_minBounds);
-  vec4 depth = vec4(internal.yyy, 1.0);
-  vec4 color = texture2D(u_texture, vec2(internal.x, 1.0 - internal.z));
+  vec3 height = modelSpace.yyy;
+  vec3 shading = (height * (1.0 - shadow * 2.0) + shadow);
+
   float lighting = ((v_normal.x + v_normal.y + v_normal.z) / 3.0);
-  vec4 shading = (depth * (1.0 - shadow * 2.0) + shadow);
-  gl_FragColor = color * shading + (lighting * 0.75);
+  vec3 outgoingLight = vec3(lighting);
+
+  float depth = 1.0 - gl_FragCoord.z / gl_FragCoord.w / 400.0;
+  
+  gl_FragColor = color * vec4(shading, 1.0) + (lighting * 0.75);
 }`;
 
 module.exports = {
