@@ -9,14 +9,12 @@
   </head>
   <body>
 
-    <responsive-child>
-      <div class="stats"></div>
-      <div class="aspect-outer">
-        <div class="aspect-inner render-container">
-        </div>
+    <div class="stats"></div>
+    <div class="aspect-outer">
+      <div class="aspect-inner render-container">
+        <canvas class="renderer"></canvas>
       </div>
-      <!-- content goes here -->
-    </responsive-child>
+    </div>
 
     <script src="app.js"></script>
     <% if (json.project.production) { %>

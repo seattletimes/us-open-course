@@ -14,7 +14,9 @@ module.exports = function(grunt) {
     var done = this.async();
 
     var b = browserify({ debug: mode == "dev" });
-    b.transform(babel);
+    b.transform(babel.configure({
+      ignore: /three/
+    }));
 
     //make sure build/ exists
     grunt.file.mkdir("build");

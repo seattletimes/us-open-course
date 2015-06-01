@@ -2,8 +2,6 @@
 // require("./lib/social");
 // require("./lib/ads");
 
-require("component-responsive-frame/child");
-
 var nextTick = window.requestAnimationFrame ? 
   window.requestAnimationFrame.bind(window) :
   function(f) { setTimeout(f, 10) };
@@ -12,27 +10,29 @@ var three = require("three");
 window.THREE = three;
 var scene = new three.Scene();
 
-var scaleDown = .8;
-var renderer = new three.WebGLRenderer();
-document.querySelector(".render-container").appendChild(renderer.domElement);
-renderer.setSize(renderer.domElement.offsetWidth * scaleDown, renderer.domElement.offsetHeight * scaleDown);
-renderer.domElement.setAttribute("style", "");
+var scaleDown = 1;//.8;
+var canvas = document.querySelector(".renderer");
+var renderer = new three.WebGLRenderer({
+  canvas: canvas
+});
+renderer.setSize(canvas.offsetWidth, canvas.offsetHeight, false);
 renderer.setClearColor(0xBBBBEE);
+window.addEventListener("resize", () => renderer.setSize(canvas.offsetWidth, canvas.offsetHeight, false));
 
 var sphere = new three.SphereGeometry(1, 16, 16);
-var white = new three.MeshPhongMaterial({ color: 0x888888 });
+var white = new three.MeshLambertMaterial({ color: 0x888888 });
 white.shading = three.FlatShading;
-var red = new three.MeshPhongMaterial({ color: 0x883333 });
+var red = new three.MeshLambertMaterial({ color: 0x552222 });
 red.shading = three.FlatShading;
 var spike = new three.CylinderGeometry(1, 0, 3, 4, 4);
-var gold = new three.MeshPhongMaterial({ color: 0xAA8800 });
+var gold = new three.MeshLambertMaterial({ color: 0xAA8800 });
+var green = new three.MeshLambertMaterial({ color: 0x446622 });
 
 var ambience = new three.AmbientLight(0xFFFFFF);
 scene.add(ambience);
 
 var sun = new three.DirectionalLight(0x888888, 2);
 sun.position.set(0, 4, 2);
-// var sun = new three.HemisphereLight(0xFFFFFF, 0x003355, .6);
 scene.add(sun);
 
 var poiMap = {};
@@ -52,7 +52,7 @@ poi.course.forEach(function(point) {
   };
 });
 
-var focus = new three.Mesh(sphere, red);
+var focus = new three.Mesh(sphere, green);
 // focus.visible = false;
 scene.add(focus);
 
@@ -101,7 +101,8 @@ var goto = function(id) {
     z: focus.position.z
   };
   if (tween) tween.stop();
-  tween = new tweenjs.Tween(current).to(midpoint, 1000)
+  tween = new tweenjs.Tween(current).to(midpoint, 1000);
+  tween.easing(tweenjs.Easing.Quartic.InOut);
   tween.start();
   tween.onUpdate(moveFocus);
 };
@@ -122,43 +123,8 @@ var renderLoop = function() {
   // setTimeout(renderLoop, 1000);
 };
 
-var async = require("async");
-
-async.parallel({
-  texture: function(c) {
-    three.ImageUtils.loadTexture("./assets/dwg.jpg", null, function(tex) {
-      c(null, tex);
-    });
-  },
-  mesh: function(c) {
-    var loader = new three.ObjectLoader();
-    loader.load("./assets/model.json", function(mesh) {
-      c(null, mesh);
-    });
-  }
-}, function(err, loaded) {
-  var mesh = loaded.mesh;
-  mesh.scale.set(0.1, 0.1, 0.1);
-  mesh.position.set(0, -20, 0);
-  mesh.geometry = new three.BufferGeometry().fromGeometry(mesh.geometry);
-  mesh.geometry.computeBoundingBox();
-  var bounds = mesh.geometry.boundingBox;
-  window.ground = mesh;
-  scene.add(mesh);
-
-  var shaders = require("./shader");
-  var shader = new three.ShaderMaterial({
-    uniforms: {
-      u_texture: { type: "t", value: loaded.texture },
-      u_minBounds: { type: "v3", value: new three.Vector3(bounds.min.x, bounds.min.y, bounds.min.z) },
-      u_maxBounds: { type: "v3", value: new three.Vector3(bounds.max.x, bounds.max.y, bounds.max.z) }
-    },
-    fragmentShader: shaders.fragment,
-    vertexShader: shaders.vertex
-  });
-  mesh.material = shader;
-  
-  //start the loop
+var init = require("./init");
+init(scene, function() {
   renderLoop();
   shift();
 });

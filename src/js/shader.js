@@ -18,14 +18,13 @@ varying vec3 v_coord;
 varying vec4 v_normal;
 
 void main() {
-  float shadow = 0.5;
+  float shadow = 0.3;
   vec3 internal = (v_coord - u_minBounds) / (u_maxBounds - u_minBounds);
   vec4 depth = vec4(internal.yyy, 1.0);
   vec4 color = texture2D(u_texture, vec2(internal.x, 1.0 - internal.z));
   float lighting = ((v_normal.x + v_normal.y + v_normal.z) / 3.0);
-  vec4 shading = (depth * (1.0 - shadow) + shadow);
-  // vec2 random = gl_FragCoord * internal.yx;
-  gl_FragColor = color * shading * clamp(lighting, 0.1, 0.8);
+  vec4 shading = (depth * (1.0 - shadow * 2.0) + shadow);
+  gl_FragColor = color * shading + (lighting * 0.75);
 }`;
 
 module.exports = {
