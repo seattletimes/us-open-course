@@ -13,7 +13,7 @@ void main() {
   vec3 internal = (v_coord - u_minBounds) / (u_maxBounds - u_minBounds);
   vec4 depth = vec4(internal.yyy, 1.0);
   vec4 color = texture2D(u_texture, vec2(internal.x, 1.0 - internal.z));
-  float lighting = clamp(v_normal.z + v_normal.y, 1.0, 2.0) / 2.0;
+  float lighting = clamp((v_normal.x + v_normal.y + v_normal.z) / 3.0, 0.1, 1.0);
   gl_FragColor = color * (depth * (1.0 - shadow) + shadow) * lighting;
 }`;
 

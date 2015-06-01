@@ -19,33 +19,6 @@ renderer.setSize(renderer.domElement.offsetWidth * scaleDown, renderer.domElemen
 renderer.domElement.setAttribute("style", "");
 renderer.setClearColor(0xEEEEFF);
 
-var loader = new three.ObjectLoader();
-loader.load("./assets/model.json", function(object) {
-  object.scale.set(0.1, 0.1, 0.1);
-  object.position.set(0, -20, 0);
-  object.geometry = new three.BufferGeometry().fromGeometry(object.geometry);
-  object.geometry.computeBoundingBox();
-  var bounds = object.geometry.boundingBox;
-  window.obj = object;
-  scene.add(object);
-
-  var shaders = require("./shader");
-  var texture = three.ImageUtils.loadTexture("assets/dwg.jpg");
-  texture.anisotropy = renderer.getMaxAnisotropy();
-  texture.minFilter = three.NearestFilter;
-  var shader = new three.ShaderMaterial({
-    uniforms: {
-      u_texture: { type: "t", value: texture },
-      u_minBounds: { type: "v3", value: new three.Vector3(bounds.min.x, bounds.min.y, bounds.min.z) },
-      u_maxBounds: { type: "v3", value: new three.Vector3(bounds.max.x, bounds.max.y, bounds.max.z) }
-    },
-    fragmentShader: shaders.fragment,
-    vertexShader: shaders.vertex
-  });
-  object.material = shader;
-
-});
-
 var sphere = new three.SphereGeometry(1, 16, 16);
 var white = new three.MeshPhongMaterial({ color: 0x888888 });
 white.shading = three.FlatShading;
@@ -136,10 +109,8 @@ var goto = function(id) {
 var current = 0;
 var shift = function() {
   goto((current++ % 18) + 1);
-  setTimeout(shift, 2000);
+  setTimeout(shift, 4000);
 };
-
-shift();
 
 var counter = 0;
 var renderLoop = function() {
@@ -151,6 +122,45 @@ var renderLoop = function() {
   // setTimeout(renderLoop, 1000);
 };
 
-window.camera = camera;
+var async = require("async");
 
-renderLoop();
+async.parallel({
+  texture: function(c) {
+    three.ImageUtils.loadTexture("./assets/dwg.jpg", null, function(tex) {
+      c(null, tex);
+    });
+  },
+  mesh: function(c) {
+    var loader = new three.ObjectLoader();
+    loader.load("./assets/model.json", function(mesh) {
+      c(null, mesh);
+    });
+  }
+}, function(err, loaded) {
+  var mesh = loaded.mesh;
+  mesh.scale.set(0.1, 0.1, 0.1);
+  mesh.position.set(0, -20, 0);
+  mesh.geometry = new three.BufferGeometry().fromGeometry(mesh.geometry);
+  mesh.geometry.computeBoundingBox();
+  var bounds = mesh.geometry.boundingBox;
+  window.ground = mesh;
+  scene.add(mesh);
+
+  var shaders = require("./shader");
+  var shader = new three.ShaderMaterial({
+    uniforms: {
+      u_texture: { type: "t", value: loaded.texture },
+      u_minBounds: { type: "v3", value: new three.Vector3(bounds.min.x, bounds.min.y, bounds.min.z) },
+      u_maxBounds: { type: "v3", value: new three.Vector3(bounds.max.x, bounds.max.y, bounds.max.z) }
+    },
+    fragmentShader: shaders.fragment,
+    vertexShader: shaders.vertex
+  });
+  mesh.material = shader;
+  
+  //start the loop
+  renderLoop();
+  shift();
+});
+
+window.camera = camera;
