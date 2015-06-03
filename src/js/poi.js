@@ -1,9 +1,21 @@
+var deg = function(r) {
+  return Math.PI * 2 * (r / 360);
+};
+
 module.exports = {
+  overview: {
+    location: [-190, 100, 150],
+    rotation: [deg(-54), deg(-36), deg(-32.4)]
+  },
   course: [
     {
       id: 1,
       tee: [7, 0, 100],
-      hole: [-122, 0, 80]
+      hole: [-122, 0, 80],
+      camera: {
+        location: [20, 20, 120],
+        rotation: [0, deg(50), 0]
+      }
     }, {
       id: 2,
       tee: [-132, 0, 43],
