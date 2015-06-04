@@ -17,7 +17,7 @@ module.exports = function(scene, ready) {
     }
   }, function(err, loaded) {
     var mesh = loaded.mesh;
-    mesh.scale.set(0.1, 0.1, 0.1);
+    // mesh.scale.set(0.1, 0.1, 0.1);
     mesh.position.set(0, 0, 0);
     mesh.geometry = new three.BufferGeometry().fromGeometry(mesh.geometry);
     mesh.geometry.computeBoundingBox();

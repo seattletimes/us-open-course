@@ -5,16 +5,16 @@ var deg = function(r) {
 
 module.exports = {
   overview: {
-    location: [-230, 80, -100],
+    location: [-2300, 800, -1000],
     rotation: [deg(-30), deg(-90), 0]
   },
   course: [
     {
       id: 1,
-      hole: [-126, 5, 76],
-      tee: [46, 9.5, 127],
+      hole: [-1260, 50, 760],
+      tee: [460, 95, 1270],
       camera: {
-        location: [50, 11, 127],
+        location: [470, 100, 1270],
         rotation: [0, deg(52), 0]
       }
     }, {

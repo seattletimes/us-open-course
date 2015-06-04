@@ -9,7 +9,7 @@ module.exports = function(scene) {
   scene.add(sun);
 
   //create the water
-  var plane = new three.PlaneGeometry(200, 550, 80, 120);
+  var plane = new three.PlaneGeometry(2000, 5500, 80, 120);
   var blue = new three.MeshPhongMaterial({
     // wireframe: true,
     color: 0x2233,
@@ -21,12 +21,12 @@ module.exports = function(scene) {
     opacity: .9
   });
   var morphs = [];
-  var waveHeight = .6;
-  var waveInterval = .5
+  var waveHeight = 3;
+  var waveInterval = .234
   plane.vertices.forEach(function(vertex, i) {
     vertex.z = Math.sin(i * waveInterval) * waveHeight
     var morphed = vertex.clone();
-    morphed.z = Math.cos(i * waveInterval) * waveHeight;
+    morphed.z = -Math.sin(i * waveInterval) * waveHeight;
     morphs.push(morphed);
   });
   plane.computeVertexNormals();
@@ -34,8 +34,6 @@ module.exports = function(scene) {
   var water = new three.Mesh(plane, blue);
   window.water = water;
   water.rotation.set(-Math.PI * .5, 0, 0);
-  water.position.set(-165, 1.2, -70);
-  var waves = new three.MorphAnimation(water);
-  waves.play();
+  water.position.set(-1650, 12, -700);
   scene.add(water);
 };

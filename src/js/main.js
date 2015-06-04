@@ -20,7 +20,7 @@ var nextTick = window.requestAnimationFrame ?
 
 window.THREE = three;
 var scene = new three.Scene();
-scene.fog = new three.Fog(SKY_COLOR, 100, 800);
+// scene.fog = new three.Fog(SKY_COLOR, 100, 800);
 
 var canvas = document.querySelector(".renderer");
 var renderer = new three.WebGLRenderer({
@@ -32,8 +32,8 @@ renderer.setSize(canvas.offsetWidth, canvas.offsetHeight, false);
 renderer.setClearColor(SKY_COLOR);
 window.addEventListener("resize", () => renderer.setSize(canvas.offsetWidth, canvas.offsetHeight, false));
 
-var camera = new three.PerspectiveCamera(80, 16 / 9, 0.1, 1000);
-camera.position.set(-200, 100, -100);
+var camera = new three.PerspectiveCamera(80, 16 / 9, 0.1, 100000);
+camera.position.set(-2000, 1000, -1000);
 camera.rotation.set(0, 0, 0);
 camera.rotation.order = "YXZ";
 window.camera = camera;
@@ -53,7 +53,7 @@ init(scene, function(terrain) {
 
   var counter = 0;
   var renderLoop = function() {
-    counter += .01;
+    counter += .1;
     water.morphTargetInfluences[0] = (Math.sin(counter) + 1) / 2;
     tweenjs.update();
     renderer.render(scene, camera);
@@ -72,6 +72,7 @@ var focusArrow = new three.Mesh(arrow, new three.MeshBasicMaterial({
   transparent: true
 }));
 scene.add(focusArrow);
+focusArrow.scale.set(20, 20, 20);
 focusArrow.visible = false;
 var cycle = new tweenjs.Tween({ alpha: .8 }).to({ alpha: .3 }, 700);
 cycle.repeat(Infinity).yoyo(true);
@@ -150,7 +151,7 @@ var goto = function(id) {
     shot = point.data.camera;
     current = point;
     //move arrow over point
-    focusArrow.position.set(point.hole.position.x, point.hole.position.y + 12, point.hole.position.z);
+    focusArrow.position.set(point.hole.position.x, point.hole.position.y + 120, point.hole.position.z);
     focusArrow.visible = true;
   }
   var newPosition = new three.Vector3(...shot.location);
@@ -167,9 +168,9 @@ var tour = function() {
 
   var currentPosition = camera.position.clone();
   var newPosition = point.hole.position.clone();
-  newPosition.y += 20;
-  newPosition.x += 10;
-  newPosition.z += 10;
+  newPosition.y += 100;
+  newPosition.x += 50;
+  newPosition.z += 50;
 
   var currentRotation = camera.rotation.clone();
   camera.lookAt(point.hole.position);
@@ -191,9 +192,9 @@ var tour = function() {
       );
 
       var lifted = midpoint.clone();
-      lifted.x -= 70;
-      lifted.y += 70;
-      lifted.z += 70;
+      lifted.x -= 700;
+      lifted.y += 700;
+      lifted.z += 700;
 
       var currentPosition = camera.position.clone();
       camera.position.set(lifted.x, lifted.y, lifted.z);
