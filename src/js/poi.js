@@ -79,7 +79,7 @@ module.exports = {
       tee: [138, 25, 209.5],
       camera: {
         location: [140, 27, 210],
-        rotation: [deg(-45), deg(70), deg(45)]
+        rotation: [deg(-30), deg(70), 0]
       }
     }, {
       id: 10,
@@ -110,8 +110,8 @@ module.exports = {
       hole: [151, 23, -188],
       tee: [4, 19.5, -268],
       camera: {
-        location: [0, 23, -268],
-        rotation: [deg(20), deg(-100), deg(20)]
+        location: [0, 23, -272],
+        rotation: [deg(-15), deg(-110), 0]
       }
     }, {
       id: 14,

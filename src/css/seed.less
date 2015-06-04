@@ -7,6 +7,25 @@
 
 @import "seattletimes";
 
+nav {
+  padding: 4px 0;
+
+  a {
+    display: inline-block;
+    padding: 0 4px;
+    border-radius: 4px;
+
+    &:hover {
+      background: #EEE;
+    }
+
+    &.selected {
+      background: #888;
+      color: white;
+    }
+  }
+}
+
 .render-container {
   &::before {
     position: absolute;

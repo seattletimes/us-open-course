@@ -82,29 +82,31 @@ cycle.start();
 
 var cameraTweens = {
   location: null,
-  rotation: null,
-  halt: function() {
-    if (this.location) this.location.stop();
-    if (this.rotation) this.rotation.stop();
-  }
+  rotation: null
 };
 
 var moveCamera = function(currentPosition, newPosition, time, during, done) {
+  if (cameraTweens.location) cameraTweens.location.stop();
+
   if (typeof done == "undefined") {
     done = during;
     during = null;
   }
+
   var l = cameraTweens.location = new tweenjs.Tween(currentPosition).to(newPosition, time);
   l.easing(tweenjs.Easing.Quartic.InOut);
   l.onUpdate(function() {
     camera.position.set(this.x, this.y, this.z);
     if (during) during();
   });
-  if (done) l.onComplete(done);
+  if (done) l.onComplete(function() {
+    nextTick(() => done());
+  });
   l.start();
 };
 
 var rotateCamera = function(currentRotation, newRotation, time, during, done) {
+  if (cameraTweens.rotation) cameraTweens.rotation.stop();
   if (typeof done == "undefined") {
     done = during;
     during = null;
@@ -125,19 +127,17 @@ var rotateCamera = function(currentRotation, newRotation, time, during, done) {
     camera.rotation.set(this.x, this.y, this.z);
     if (during) during();
   });
-  if (done) r.onComplete(done);
+  if (done) r.onComplete(function() {
+    nextTick(() => done());
+  });
   r.start();
 }
 
 var current = null;
 var goto = function(id) {
-  if (false && current) {
-    current.hole.visible = false;
-    current.tee.visible = false;
-  }
 
-  var currentPosition = camera.position;
-  var currentRotation = camera.rotation;
+  var currentPosition = camera.position.clone();
+  var currentRotation = camera.rotation.clone();
   var newRotation, newPosition, shot;
 
   if (id == "overview") {
@@ -148,8 +148,6 @@ var goto = function(id) {
   } else {
     var point = poiMap[id];
     shot = point.data.camera;
-    point.hole.visible = true;
-    point.tee.visible = true;
     current = point;
     //move arrow over point
     focusArrow.position.set(point.hole.position.x, point.hole.position.y + 12, point.hole.position.z);
@@ -157,8 +155,6 @@ var goto = function(id) {
   }
   var newPosition = new three.Vector3(...shot.location);
   var newRotation = new three.Vector3(...shot.rotation);
-  
-  cameraTweens.halt();
 
   moveCamera(currentPosition, newPosition, TRAVEL_TIME);
   rotateCamera(currentRotation, newRotation, TRAVEL_TIME);
@@ -180,19 +176,14 @@ var tour = function() {
   var newRotation = camera.rotation.clone();
   camera.rotation.set(currentRotation.x, currentRotation.y, currentRotation.z);
 
-  cameraTweens.halt();
-
   async.series([
     (c) => {
-      console.log("rotating");
       rotateCamera(currentRotation, newRotation, 500, c);
     },
     (c) => {
-      console.log("drone flight");
       moveCamera(currentPosition, newPosition, DRONE_TIME, () => camera.lookAt(point.hole.position), c);
     },
     (c) => {
-      console.log("pulling back");
       var midpoint = new three.Vector3(
         (point.hole.position.x + point.tee.position.x) / 2,
         (point.hole.position.y + point.tee.position.y) / 2,
@@ -212,8 +203,13 @@ var tour = function() {
       camera.rotation.set(currentRotation.x, currentRotation.y, currentRotation.z);
       camera.position.set(currentPosition.x, currentPosition.y, currentPosition.z);
 
-      moveCamera(currentPosition, lifted, AERIAL_TIME);
-      rotateCamera(currentRotation, newRotation, AERIAL_TIME);
+      async.parallel([
+        (d) => moveCamera(currentPosition, lifted, AERIAL_TIME, d),
+        (d) => rotateCamera(currentRotation, newRotation, AERIAL_TIME, d)
+      ], c);
+    },
+    (c) => {
+      goto(current.data.id);
     }
   ], function(err) {
     console.log(arguments);
@@ -221,15 +217,12 @@ var tour = function() {
 
 }
 
-var current = 0;
-var shift = function() {
-  goto((current++ % 18) + 1);
-  setTimeout(shift, 4000);
-};
-
 //navigation
 document.body.addEventListener("click", function(e) {
   if (e.target.classList.contains("go-to")) {
+    document.querySelector("nav .selected").classList.remove("selected");
+    e.target.classList.add("selected");
+
     var id = e.target.getAttribute("data-link");
     goto(id);
   }

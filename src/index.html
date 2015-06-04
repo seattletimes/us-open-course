@@ -10,17 +10,18 @@
   <body>
 
     <nav>
-      <a href="javascript:;" class="go-to" data-link="overview">Overview</a>
+      <a href="javascript:;" class="go-to selected" data-link="overview">Overview</a>
       <% for (var i = 1; i <= 18; i++) { %>
       <a href="javascript:;" class="go-to" data-link="<%= i %>"><%= i %></a>
       <% } %>
+      |
+      <a href="javascript:;" class="tour">Tour this hole</a>
     </nav>
     <div class="aspect-outer">
       <div class="aspect-inner render-container">
         <canvas class="renderer"></canvas>
       </div>
     </div>
-    <a href="javascript:;" class="tour">Tour current</a>
 
     <script src="app.js" async defer></script>
     <% if (json.project.production) { %>
