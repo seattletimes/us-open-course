@@ -6,7 +6,7 @@ var deg = function(r) {
 module.exports = {
   overview: {
     location: [-230, 80, -100],
-    rotation: [-1.95, -.96, -2.02]
+    rotation: [deg(-30), deg(-90), 0]
   },
   course: [
     {

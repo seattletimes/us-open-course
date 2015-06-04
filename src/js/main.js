@@ -9,6 +9,10 @@ var tweenjs = require("tween.js");
 const SKY_COLOR = 0xBBBBEE;
 const TAU = Math.PI * 2;
 const TRAVEL_TIME = 2000;
+const DRONE_TIME = 6000;
+const AERIAL_TIME = 4000;
+
+var deg = (d) => d / 360 * TAU;
 
 var nextTick = window.requestAnimationFrame ? 
   window.requestAnimationFrame.bind(window) :
@@ -30,7 +34,8 @@ window.addEventListener("resize", () => renderer.setSize(canvas.offsetWidth, can
 
 var camera = new three.PerspectiveCamera(80, 16 / 9, 0.1, 1000);
 camera.position.set(-200, 100, -100);
-camera.rotation.set(-1, -1, -1);
+camera.rotation.set(0, 0, 0);
+camera.rotation.order = "YXZ";
 window.camera = camera;
 
 var makeScenery = require("./scenery");
@@ -60,18 +65,6 @@ init(scene, function(terrain) {
   goto("overview");
 });
 
-//navigation
-document.body.addEventListener("click", function(e) {
-  if (!e.target.classList.contains("go-to")) return;
-  var id = e.target.getAttribute("data-link");
-  goto(id);
-});
-
-var cameraTweens = {
-  location: null,
-  rotation: null
-};
-var previous = null;
 var arrow = require("./arrow");
 var focusArrow = new three.Mesh(arrow, new three.MeshBasicMaterial({
   // wireframe: true,
@@ -87,10 +80,60 @@ cycle.onUpdate(function() {
 });
 cycle.start();
 
+var cameraTweens = {
+  location: null,
+  rotation: null,
+  halt: function() {
+    if (this.location) this.location.stop();
+    if (this.rotation) this.rotation.stop();
+  }
+};
+
+var moveCamera = function(currentPosition, newPosition, time, during, done) {
+  if (typeof done == "undefined") {
+    done = during;
+    during = null;
+  }
+  var l = cameraTweens.location = new tweenjs.Tween(currentPosition).to(newPosition, time);
+  l.easing(tweenjs.Easing.Quartic.InOut);
+  l.onUpdate(function() {
+    camera.position.set(this.x, this.y, this.z);
+    if (during) during();
+  });
+  if (done) l.onComplete(done);
+  l.start();
+};
+
+var rotateCamera = function(currentRotation, newRotation, time, during, done) {
+  if (typeof done == "undefined") {
+    done = during;
+    during = null;
+  }
+
+  //normalize rotation to prevent weird shifts
+  ["x", "y", "z"].forEach(function(axis) {
+    // if (currentRotation[axis] > Math.PI) currentRotation[axis] -= TAU;
+    // if (newRotation[axis] > Math.PI) newRotation[axis] -= TAU;
+    if (newRotation[axis] - currentRotation[axis] >= Math.PI) {
+      newRotation[axis] -= TAU;
+    }
+  });
+
+  var r = cameraTweens.rotation = new tweenjs.Tween(currentRotation).to(newRotation, time);
+  r.easing(tweenjs.Easing.Cubic.InOut);
+  r.onUpdate(function() {
+    camera.rotation.set(this.x, this.y, this.z);
+    if (during) during();
+  });
+  if (done) r.onComplete(done);
+  r.start();
+}
+
+var current = null;
 var goto = function(id) {
-  if (false && previous) {
-    previous.hole.visible = false;
-    previous.tee.visible = false;
+  if (false && current) {
+    current.hole.visible = false;
+    current.tee.visible = false;
   }
 
   var currentPosition = camera.position;
@@ -101,48 +144,96 @@ var goto = function(id) {
     shot = poiMap.overview;
     //hide arrow
     focusArrow.visible = false;
+    current = null;
   } else {
     var point = poiMap[id];
     shot = point.data.camera;
     point.hole.visible = true;
     point.tee.visible = true;
-    previous = point;
+    current = point;
     //move arrow over point
     focusArrow.position.set(point.hole.position.x, point.hole.position.y + 12, point.hole.position.z);
     focusArrow.visible = true;
   }
   var newPosition = new three.Vector3(...shot.location);
   var newRotation = new three.Vector3(...shot.rotation);
-
-  //normalize rotation to prevent weird shifts
-  ["x", "y", "z"].forEach(function(axis) {
-    if (newRotation[axis] - currentRotation[axis] > Math.PI) {
-      newRotation[axis] -= TAU;
-    } else if (currentRotation[axis] - newRotation[axis] > Math.PI) {
-      newRotation[axis] += TAU;
-    }
-  });
   
-  if (cameraTweens.location) cameraTweens.location.stop();
-  if (cameraTweens.rotation) cameraTweens.rotation.stop();
+  cameraTweens.halt();
 
-  var l = cameraTweens.location = new tweenjs.Tween(currentPosition).to(newPosition, TRAVEL_TIME);
-  l.easing(tweenjs.Easing.Quartic.Out);
-  l.onUpdate(function() {
-    camera.position.set(this.x, this.y, this.z);
-  });
-  l.start();
+  moveCamera(currentPosition, newPosition, TRAVEL_TIME);
+  rotateCamera(currentRotation, newRotation, TRAVEL_TIME);
 
-  var r = cameraTweens.rotation = new tweenjs.Tween(currentRotation).to(newRotation, TRAVEL_TIME);
-  r.easing(tweenjs.Easing.Quartic.Out);
-  r.onUpdate(function() {
-    camera.rotation.set(this.x, this.y, this.z);
-  });
-  r.start();
 };
+
+var tour = function() {
+  if (!current) return;
+  var point = current;
+
+  var currentPosition = camera.position.clone();
+  var newPosition = point.hole.position.clone();
+  newPosition.y += 20;
+  newPosition.x += 10;
+  newPosition.z += 10;
+
+  var currentRotation = camera.rotation.clone();
+  camera.lookAt(point.hole.position);
+  var newRotation = camera.rotation.clone();
+  camera.rotation.set(currentRotation.x, currentRotation.y, currentRotation.z);
+
+  cameraTweens.halt();
+
+  async.series([
+    (c) => {
+      console.log("rotating");
+      rotateCamera(currentRotation, newRotation, 500, c);
+    },
+    (c) => {
+      console.log("drone flight");
+      moveCamera(currentPosition, newPosition, DRONE_TIME, () => camera.lookAt(point.hole.position), c);
+    },
+    (c) => {
+      console.log("pulling back");
+      var midpoint = new three.Vector3(
+        (point.hole.position.x + point.tee.position.x) / 2,
+        (point.hole.position.y + point.tee.position.y) / 2,
+        (point.hole.position.z + point.tee.position.z) / 2
+      );
+
+      var lifted = midpoint.clone();
+      lifted.x -= 70;
+      lifted.y += 70;
+      lifted.z += 70;
+
+      var currentPosition = camera.position.clone();
+      camera.position.set(lifted.x, lifted.y, lifted.z);
+      var currentRotation = camera.rotation.clone();
+      camera.lookAt(midpoint);
+      var newRotation = camera.rotation.clone();
+      camera.rotation.set(currentRotation.x, currentRotation.y, currentRotation.z);
+      camera.position.set(currentPosition.x, currentPosition.y, currentPosition.z);
+
+      moveCamera(currentPosition, lifted, AERIAL_TIME);
+      rotateCamera(currentRotation, newRotation, AERIAL_TIME);
+    }
+  ], function(err) {
+    console.log(arguments);
+  })
+
+}
 
 var current = 0;
 var shift = function() {
   goto((current++ % 18) + 1);
   setTimeout(shift, 4000);
 };
+
+//navigation
+document.body.addEventListener("click", function(e) {
+  if (e.target.classList.contains("go-to")) {
+    var id = e.target.getAttribute("data-link");
+    goto(id);
+  }
+  if (e.target.classList.contains("tour")) {
+    tour();
+  }
+});
