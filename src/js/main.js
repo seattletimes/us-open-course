@@ -56,7 +56,9 @@ var poiMap = {};
 
 document.body.classList.add("loading");
 var init = require("./init");
-init(scene, function(objects) {
+init(scene, function(terrain) {
+
+  window.terrain = terrain;
 
   //set up remains of the scene
   var sphere = new three.SphereGeometry(1, 16, 16);
@@ -68,13 +70,15 @@ init(scene, function(objects) {
     point.tee = new three.Vector3(...point.tee);
 
     //set hole positions, including the y from terrain
+    var rayHeight = 600;
+    var rayScale = terrain.scale.y;
     raycaster.set(
-      new three.Vector3(point.hole.x, 1000, point.hole.z),
+      new three.Vector3(point.hole.x / rayScale, rayHeight, point.hole.z / rayScale),
       new three.Vector3(0, -1, 0)
     );
-    var intersects = raycaster.intersectObject(objects.terrain);
+    var intersects = raycaster.intersectObject(terrain);
     if (intersects[0]) {
-      point.hole.y = (1000 - intersects[0].distance) * .1;
+      point.hole.y = intersects[0].point.y * rayScale;
     }
 
     var ball = new three.Mesh(sphere, materials.white);
@@ -83,15 +87,15 @@ init(scene, function(objects) {
 
     //do the same for the tees
     raycaster.set(
-      new three.Vector3(point.tee.x, 1000, point.tee.z),
+      new three.Vector3(point.tee.x / rayScale, rayHeight, point.tee.z / rayScale),
       new three.Vector3(0, -1, 0)
     );
-    var intersects = raycaster.intersectObject(objects.terrain);
+    var intersects = raycaster.intersectObject(terrain, true);
     if (intersects[0]) {
-      point.tee.y = (1000 - intersects[0].distance) * .1;
+      point.tee.y = intersects[0].point.y * rayScale;
     }
     var tee = new three.Mesh(spike, materials.red);
-    tee.position.set(point.tee.x, point.tee.y, point.tee.z);
+    tee.position.set(point.tee.x, point.tee.y + .25, point.tee.z);
     scene.add(tee);
 
     // ball.visible = false;
@@ -104,10 +108,37 @@ init(scene, function(objects) {
     };
   });
 
+  //create the water
+  var plane = new three.PlaneGeometry(200, 550, 60, 120);
+  var blue = new three.MeshPhongMaterial({
+    // wireframe: true,
+    color: 0x3366,
+    specular: 0xFFFFFF,
+    // shininess: 100,
+    morphTargets: true
+  });
+  var morphs = [];
+  var waveHeight = .2;
+  plane.vertices.forEach(function(vertex, i) {
+    vertex.z = Math.sin(i) * waveHeight
+    var morphed = vertex.clone();
+    morphed.z = Math.cos(i) * waveHeight;
+    morphs.push(morphed);
+  });
+  plane.computeVertexNormals();
+  plane.morphTargets.push({ name: "morph", vertices: morphs });
+  var water = new three.Mesh(plane, blue);
+  window.water = water;
+  water.rotation.x = -Math.PI * .5;
+  water.position.set(-160, 1.5, -70);
+  var waves = new three.MorphAnimation(water);
+  waves.play();
+  scene.add(water);
+
   var counter = 0;
   var renderLoop = function() {
     counter += .01;
-    objects.water.morphTargetInfluences[0] = Math.abs(Math.sin(counter))
+    water.morphTargetInfluences[0] = Math.abs(Math.sin(counter))
     tweenjs.update();
     renderer.render(scene, camera);
     nextTick(renderLoop);
@@ -115,7 +146,11 @@ init(scene, function(objects) {
 
   document.body.classList.remove("loading");
   renderLoop();
-  goto("overview");
+  //goto("overview");
+  var focus = poiMap[10].data.tee;
+  camera.position.set(focus.x, focus.y + 70, focus.z + 10);
+  camera.rotation.set(0, 0, 0);
+  camera.lookAt(focus);
 });
 
 //navigation
