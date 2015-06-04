@@ -21,7 +21,7 @@ module.exports = function(scene) {
     opacity: .9
   });
   var morphs = [];
-  var waveHeight = .2;
+  var waveHeight = .15;
   plane.vertices.forEach(function(vertex, i) {
     vertex.z = Math.sin(i) * waveHeight
     var morphed = vertex.clone();

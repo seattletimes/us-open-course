@@ -56,7 +56,7 @@ init(scene, function(terrain) {
   //goto("overview");
 
   //debug code for placing landmarks
-  var focus = poiMap[11].data.hole;
+  var focus = poiMap[12].data.hole;
   camera.position.set(focus.x, focus.y + 30, focus.z + 10);
   camera.lookAt(focus);
 });
