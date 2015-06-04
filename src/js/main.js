@@ -45,7 +45,7 @@ init(scene, function(terrain) {
   var counter = 0;
   var renderLoop = function() {
     counter += .01;
-    water.morphTargetInfluences[0] = Math.abs(Math.sin(counter))
+    water.morphTargetInfluences[0] = (Math.sin(counter) + 1) / 2;
     tweenjs.update();
     renderer.render(scene, camera);
     nextTick(renderLoop);
@@ -54,9 +54,10 @@ init(scene, function(terrain) {
   document.body.classList.remove("loading");
   renderLoop();
   //goto("overview");
-  var focus = poiMap[10].data.hole;
-  camera.position.set(focus.x - 10, focus.y + 20, focus.z + 10);
-  camera.rotation.set(0, 0, 0);
+
+  //debug code for placing landmarks
+  var focus = poiMap[11].data.hole;
+  camera.position.set(focus.x, focus.y + 30, focus.z + 10);
   camera.lookAt(focus);
 });
 

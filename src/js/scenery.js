@@ -9,14 +9,16 @@ module.exports = function(scene) {
   scene.add(sun);
 
   //create the water
-  var plane = new three.PlaneGeometry(200, 550, 60, 120);
+  var plane = new three.PlaneGeometry(200, 550, 80, 120);
   var blue = new three.MeshPhongMaterial({
     // wireframe: true,
-    color: 0x3366,
-    specular: 0xFFFFFF,
-    // shading: three.FlatShading,
-    // shininess: 100,
-    morphTargets: true
+    color: 0x2233,
+    specular: 0x111111,
+    shading: three.FlatShading,
+    shininess: 30,
+    morphTargets: true,
+    transparent: true,
+    opacity: .9
   });
   var morphs = [];
   var waveHeight = .2;
