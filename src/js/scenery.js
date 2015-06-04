@@ -15,25 +15,26 @@ module.exports = function(scene) {
     color: 0x2233,
     specular: 0x111111,
     shading: three.FlatShading,
-    shininess: 30,
+    shininess: 20,
     morphTargets: true,
     transparent: true,
     opacity: .9
   });
   var morphs = [];
-  var waveHeight = .15;
+  var waveHeight = .6;
+  var waveInterval = .5
   plane.vertices.forEach(function(vertex, i) {
-    vertex.z = Math.sin(i) * waveHeight
+    vertex.z = Math.sin(i * waveInterval) * waveHeight
     var morphed = vertex.clone();
-    morphed.z = Math.cos(i) * waveHeight;
+    morphed.z = Math.cos(i * waveInterval) * waveHeight;
     morphs.push(morphed);
   });
   plane.computeVertexNormals();
   plane.morphTargets.push({ name: "morph", vertices: morphs });
   var water = new three.Mesh(plane, blue);
   window.water = water;
-  water.rotation.x = -Math.PI * .5;
-  water.position.set(-160, 1.5, -70);
+  water.rotation.set(-Math.PI * .5, 0, 0);
+  water.position.set(-165, 1.2, -70);
   var waves = new three.MorphAnimation(water);
   waves.play();
   scene.add(water);

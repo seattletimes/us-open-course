@@ -1,89 +1,158 @@
 var deg = function(r) {
+  if (r < 0) r += 360;
   return Math.PI * 2 * (r / 360);
 };
 
 module.exports = {
   overview: {
-    location: [-190, 100, 150],
-    rotation: [deg(-54), deg(-36), deg(-32.4)]
+    location: [-230, 80, -100],
+    rotation: [-1.95, -.96, -2.02]
   },
   course: [
     {
       id: 1,
       hole: [-126, 5, 76],
-      tee: [46, 9, 127],
+      tee: [46, 9.5, 127],
       camera: {
-        location: [60, 50, 120],
-        rotation: [0, deg(50), 0]
+        location: [50, 11, 127],
+        rotation: [0, deg(52), 0]
       }
     }, {
       id: 2,
       hole: [-112, 6.5, -84],
-      tee: [-141, 8, 57]
+      tee: [-141, 8, 57],
+      camera: {
+        location: [-142, 10, 60],
+        rotation: [0, 0, 0]
+      }
     }, {
       id: 3,
       hole: [-97, 7, -137],
-      tee: [-79, 8, -82]
+      tee: [-79, 8, -82],
+      camera: {
+        location: [-79, 9, -80],
+        rotation: [0, deg(12), 0]
+      }
     }, {
       id: 4,
       hole: [143, 20, -108],
-      tee: [-14, 13, -168]
+      tee: [-14, 13, -168],
+      camera: {
+        location: [-16, 14, -168],
+        rotation: [0, deg(270), 0]
+      }
     }, {
       id: 5,
       hole: [-14, 11, -138],
-      tee: [133, 19, -80]
+      tee: [133, 19, -80],
+      camera: {
+        location: [135, 20, -80],
+        rotation: [0, deg(90), 0]
+      }
     }, {
       id: 6,
       hole: [-17.5, 9, 12],
-      tee: [-33, 10.5, -154]
+      tee: [-33, 10.75, -154],
+      camera: {
+        location: [-33, 11.5, -158],
+        rotation: [0, deg(-170), 0]
+      }
     }, {
       id: 7,
       hole: [142, 17, -55],
-      tee: [0, 8, 10]
+      tee: [0, 8.5, 10],
+      camera: {
+        location: [-2, 9, 11],
+        rotation: [0, deg(-75), 0]
+      }
     }, {
       id: 8,
       hole: [137, 20, 178],
-      tee: [136, 16.5, -17]
+      tee: [136, 17, -17],
+      camera: {
+        location: [130, 19, -22],
+        rotation: [0, deg(190), 0]
+      }
     }, {
       id: 9,
       hole: [70, 12.5, 182],
-      tee: [137, 23, 211]
+      tee: [138, 25, 209.5],
+      camera: {
+        location: [140, 27, 210],
+        rotation: [deg(-45), deg(70), deg(45)]
+      }
     }, {
       id: 10,
       hole: [-73, 8, 28],
-      tee: [42, 9, 104]
+      tee: [42, 9, 104],
+      camera: {
+        location: [44, 10, 104],
+        rotation: [0, deg(80), 0]
+      }
     }, {
       id: 11,
       hole: [-56, 7.5, -150],
-      tee: [-68, 8, 14]
+      tee: [-68, 8.5, 14],
+      camera: {
+        location: [-67, 11, 19],
+        rotation: [0, deg(10), 0]
+      }
     }, {
       id: 12,
-      hole: [-20, 16.5, -281],
-      tee: [-59, 10.5, -189]
+      hole: [-18, 16.5, -271],
+      tee: [-59, 10.8, -174],
+      camera: {
+        location: [-60, 12, -170],
+        rotation: [0, deg(-20), 0]
+      }
     }, {
       id: 13,
-      hole: [151, 23, -200],
-      tee: [4, 19, -269]
+      hole: [151, 23, -188],
+      tee: [4, 19.5, -268],
+      camera: {
+        location: [0, 23, -268],
+        rotation: [deg(20), deg(-100), deg(20)]
+      }
     }, {
       id: 14,
-      hole: [0.6, 15, -223],
-      tee: [144, 22, -169]
+      hole: [0, 15, -222],
+      tee: [144, 22.2, -169],
+      camera: {
+        location: [146, 23, -169],
+        rotation: [0, deg(70), 0]
+      }
     }, {
       id: 15,
-      hole: [-105, 5.7, -159],
-      tee: [-79, 8, -187]
+      hole: [-106, 5.7, -163],
+      tee: [-81, 8.2, -187],
+      camera: {
+        location: [-81, 10, -190],
+        rotation: [0, deg(160), 0]
+      }
     }, {
       id: 16,
-      hole: [-146, 3, -76],
-      tee: [-124, 5, -64]
+      hole: [-156, 3, -7],
+      tee: [-129, 5, -139],
+      camera: {
+        location: [-129, 6, -141],
+        rotation: [0, deg(180), 0]
+      }
     }, {
       id: 17,
-      hole: [-174, 3.5, 86],
-      tee: [-153, 8, 26.5]
+      hole: [-177, 3.5, 89],
+      tee: [-161, 7.5, 26.5],
+      camera: {
+        location: [-161, 9, 24],
+        rotation: [0, deg(180), 0]
+      }
     }, {
       id: 18,
-      hole: [18, 6, 140],
-      tee: [-156, 3, 118.5]
+      hole: [24, 6, 145],
+      tee: [-168, 3.5, 109],
+      camera: {
+        location: [-171, 5, 109],
+        rotation: [0, deg(-90), 0]
+      }
     }
   ]
 }

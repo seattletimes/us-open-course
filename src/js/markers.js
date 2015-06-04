@@ -1,26 +1,18 @@
 var three = require("three");
 var poiList = require("./poi");
 
-var materials = {
-  white: 0x888888,
-  red: 0x772110,
-  gold: 0xAA8800,
-  green: 0x446622
-};
-
-for (var key in materials) {
-  materials[key] = new three.MeshLambertMaterial({
-    color: materials[key],
-    emissive: 0x222222,
-    shading: three.SmoothShading,
-    fog: true
-  });
-}
-
 module.exports = function(scene) {
   //set up remains of the scene
-  var sphere = new three.SphereGeometry(1, 16, 16);
+  var sphere = new three.SphereGeometry(.05, 16, 16);
+  var white = new three.MeshLambertMaterial({
+    color: 0x888888,
+    emissive: 0x888888
+  });
   var flag = require("./flag");
+  var red = new three.MeshLambertMaterial({
+    color: 0x772110,
+    emissive: 0x440000
+  });
 
   var poiMap = {
     overview: poiList.overview
@@ -30,17 +22,17 @@ module.exports = function(scene) {
     point.hole = new three.Vector3(...point.hole);
     point.tee = new three.Vector3(...point.tee);
 
-    var ball = new three.Mesh(sphere, materials.white);
+    var ball = new three.Mesh(sphere, white);
     ball.position.set(point.tee.x, point.tee.y, point.tee.z);
     scene.add(ball);
 
-    var hole = new three.Mesh(flag, materials.red);
+    var hole = new three.Mesh(flag, red);
     hole.position.set(point.hole.x, point.hole.y + .25, point.hole.z);
     hole.rotation.set(0, Math.PI * Math.random(), 0);
     scene.add(hole);
 
     // ball.visible = false;
-    // tee.visible = false;
+    // hole.visible = false;
 
     poiMap[point.id] = {
       hole: hole,
