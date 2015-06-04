@@ -21,7 +21,7 @@
       </div>
     </div>
 
-    <script src="app.js"></script>
+    <script src="app.js" async defer></script>
     <% if (json.project.production) { %>
     <%= !json.project.embedded ? t.include("partials/_adFoot.html") : "" %>
     <%= t.include("partials/_workHere.html") %>
