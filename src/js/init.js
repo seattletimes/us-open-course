@@ -35,6 +35,14 @@ module.exports = function(scene, ready) {
         three.UniformsLib.fog,
         three.UniformsLib.lights,
         three.UniformsLib.shadowmap,
+        //phong
+        {
+          emissive: { type: "c", value: new three.Color(0x0) },
+          specular : { type: "c", value: new three.Color( 0x111111 ) },
+          shininess: { type: "f", value: 5 },
+          wrapRGB  : { type: "v3", value: new three.Vector3( 0.5, 0.5, 0.5 ) }
+        },
+        //texture projection
         {
           u_minBounds: { type: "v3", value: new three.Vector3(bounds.min.x, bounds.min.y, bounds.min.z) },
           u_maxBounds: { type: "v3", value: new three.Vector3(bounds.max.x, bounds.max.y, bounds.max.z) }
@@ -43,7 +51,8 @@ module.exports = function(scene, ready) {
       fragmentShader: shaders.fragment,
       vertexShader: shaders.vertex,
       fog: true,
-      lights: true
+      lights: true,
+      shading: three.SmoothShading
     });
     //three's merge clobbers our texture for some reason, add it manually
     shader.uniforms.u_texture = { type: "t", value: loaded.texture };

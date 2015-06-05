@@ -7,7 +7,7 @@ var three = require("three");
 var tweenjs = require("tween.js");
 var scale = require("./scales");
 
-const SKY_COLOR = 0xBBBBEE;
+const SKY_COLOR = 0xBBCCFF;
 const TAU = Math.PI * 2;
 const GOTO_TIME = 2000;
 const AERIAL_TIME = 3000;
@@ -24,7 +24,7 @@ var nextTick = window.requestAnimationFrame ?
 
 window.THREE = three;
 var scene = new three.Scene();
-// scene.fog = new three.Fog(SKY_COLOR, 100, 800);
+// scene.fog = new three.Fog(SKY_COLOR, 1000, 5000);
 
 var canvas = document.querySelector(".renderer");
 var renderer = new three.WebGLRenderer({
@@ -56,9 +56,13 @@ init(scene, function(terrain) {
   window.terrain = terrain;
 
   var counter = 0;
+
+  var waterPosition = water.position.clone();
+
   var renderLoop = function() {
-    counter += .04;
+    counter += .05;
     water.morphTargetInfluences[0] = (Math.sin(counter) + 1) / 2;
+    water.position.set(waterPosition.x, waterPosition.y + (Math.sin(counter) * 2), waterPosition.z);
     tweenjs.update();
     renderer.render(scene, camera);
     nextTick(renderLoop);
@@ -96,7 +100,7 @@ init(scene, function(terrain) {
 
   document.body.classList.remove("loading");
   renderLoop();
-  goto(10);
+  goto("overview");
   
   // var focus = poiMap[18].data.tee;
   // camera.position.set(focus.x, focus.y + 600, focus.z + 10);
@@ -154,6 +158,8 @@ var rotateCamera = function(currentRotation, newRotation, time, during, done) {
 
   //normalize rotation to prevent weird shifts
   ["x", "y", "z"].forEach(function(axis) {
+    newRotation[axis] %= TAU;
+    currentRotation[axis] %= TAU;
     // if (currentRotation[axis] > Math.PI) currentRotation[axis] -= TAU;
     // if (newRotation[axis] > Math.PI) newRotation[axis] -= TAU;
     if (newRotation[axis] - currentRotation[axis] >= Math.PI) {
