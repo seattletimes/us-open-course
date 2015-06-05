@@ -53,16 +53,51 @@ init(scene, function(terrain) {
 
   var counter = 0;
   var renderLoop = function() {
-    counter += .1;
+    counter += .04;
     water.morphTargetInfluences[0] = (Math.sin(counter) + 1) / 2;
     tweenjs.update();
     renderer.render(scene, camera);
     nextTick(renderLoop);
   };
+  
+  // var elevations = []
+  
+  // Object.keys(poiMap).forEach(function(id) {
+  //   console.log(id);
+  //   if (id == "overview") return;
+  //   var point = poiMap[id];
+  //   var elevation = {};
+    
+  //   var raycaster = new three.Raycaster();
+  //   var above = point.data.hole.clone();
+  //   above.y = 1000;
+  //   raycaster.set(above, new three.Vector3(0, -1, 0));
+  //   var i = raycaster.intersectObject(terrain);
+  //   if (i[0]) {
+  //     elevation.hole = i[0].point.y;
+  //   }
+    
+  //   above = point.data.tee.clone();
+  //   above.y = 1000;
+  //   raycaster.set(above, new three.Vector3(0, -1, 0));
+  //   var i = raycaster.intersectObject(terrain);
+  //   if (i[0]) {
+  //     elevation.tee = i[0].point.y;
+  //   }
+    
+  //   elevations.push(elevation);
+  // })
+  
+  // console.table(elevations);
 
   document.body.classList.remove("loading");
   renderLoop();
   goto("overview");
+  
+  // var focus = poiMap[18].data.tee;
+  // camera.position.set(focus.x, focus.y + 600, focus.z + 10);
+  // camera.lookAt(focus);
+  
 });
 
 var arrow = require("./arrow");

@@ -3,7 +3,7 @@ var poiList = require("./poi");
 
 module.exports = function(scene) {
   //set up remains of the scene
-  var sphere = new three.SphereGeometry(.05, 16, 16);
+  var sphere = new three.SphereGeometry(10, 16, 16);
   var white = new three.MeshLambertMaterial({
     color: 0x888888,
     emissive: 0x888888
