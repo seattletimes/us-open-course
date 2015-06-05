@@ -7,6 +7,7 @@ var three = require("three");
 var tweenjs = require("tween.js");
 var scale = require("./scales");
 
+var scaling = 1;
 const SKY_COLOR = 0xBBCCFF;
 const TAU = Math.PI * 2;
 const GOTO_TIME = 2000;
@@ -32,9 +33,10 @@ var renderer = new three.WebGLRenderer({
   alpha: false,
   antialias: true
 });
-renderer.setSize(canvas.offsetWidth, canvas.offsetHeight, false);
 renderer.setClearColor(SKY_COLOR);
-window.addEventListener("resize", () => renderer.setSize(canvas.offsetWidth, canvas.offsetHeight, false));
+var onResize = () => renderer.setSize(canvas.offsetWidth * scaling, canvas.offsetHeight * scaling, false)
+window.addEventListener("resize", onResize);
+onResize();
 
 var camera = new three.PerspectiveCamera(80, 16 / 9, 0.1, 100000);
 camera.position.set(-2000, 1000, -1000);
@@ -138,7 +140,7 @@ var moveCamera = function(currentPosition, newPosition, time, during, done) {
   }
 
   var l = cameraTweens.location = new tweenjs.Tween(currentPosition).to(newPosition, time);
-  l.easing(tweenjs.Easing.Cubic.InOut);
+  l.easing(tweenjs.Easing.Quadratic.InOut);
   l.onUpdate(function() {
     camera.position.set(this.x, this.y, this.z);
     if (during) during();
@@ -185,6 +187,7 @@ var goto = function(id) {
   var currentPosition = camera.position.clone();
   var currentRotation = camera.rotation.clone();
   var newRotation, newPosition, shot;
+  var previous = current;
 
   if (id == "overview") {
     shot = poiMap.overview;
@@ -202,8 +205,22 @@ var goto = function(id) {
   var newPosition = new three.Vector3(...shot.location);
   var newRotation = new three.Vector3(...shot.rotation);
 
-  moveCamera(currentPosition, newPosition, GOTO_TIME);
-  rotateCamera(currentRotation, newRotation, GOTO_TIME);
+  if (id == "overview" || !previous) {
+    moveCamera(currentPosition, newPosition, GOTO_TIME);
+    rotateCamera(currentRotation, newRotation, GOTO_TIME);
+  } else {
+    var lift = currentPosition.clone();
+    lift.y += 50;
+    async.series([
+      (c) => {
+        moveCamera(currentPosition, lift, 1000, c)
+      },
+      () => {
+        moveCamera(lift, newPosition, GOTO_TIME);
+        rotateCamera(currentRotation, newRotation, GOTO_TIME);
+      }
+    ]);
+  }
 
 };
 
