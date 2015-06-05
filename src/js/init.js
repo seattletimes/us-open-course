@@ -26,7 +26,7 @@ module.exports = function(scene, ready) {
     window.ground = mesh;
     scene.add(mesh);
 
-    loaded.texture.minFilter = three.LinearFilter;
+    loaded.texture.minFilter = loaded.texture.magFilter = three.LinearFilter;
 
     var shaders = require("./shader");
     var shader = new three.ShaderMaterial({

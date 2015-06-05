@@ -5,12 +5,16 @@
 var async = require("async");
 var three = require("three");
 var tweenjs = require("tween.js");
+var scale = require("./scales");
 
 const SKY_COLOR = 0xBBBBEE;
 const TAU = Math.PI * 2;
-const TRAVEL_TIME = 2000;
-const DRONE_TIME = 6000;
-const AERIAL_TIME = 4000;
+const GOTO_TIME = 2000;
+const AERIAL_TIME = 3000;
+const DRONE_TILT = Math.PI * .05;
+const DRONE_HEIGHT = 20;
+const DRONE_ASCENT = 3000;
+const DRONE_MPH = 20;
 
 var deg = (d) => d / 360 * TAU;
 
@@ -92,7 +96,7 @@ init(scene, function(terrain) {
 
   document.body.classList.remove("loading");
   renderLoop();
-  goto("overview");
+  goto(10);
   
   // var focus = poiMap[18].data.tee;
   // camera.position.set(focus.x, focus.y + 600, focus.z + 10);
@@ -130,7 +134,7 @@ var moveCamera = function(currentPosition, newPosition, time, during, done) {
   }
 
   var l = cameraTweens.location = new tweenjs.Tween(currentPosition).to(newPosition, time);
-  l.easing(tweenjs.Easing.Quartic.InOut);
+  l.easing(tweenjs.Easing.Cubic.InOut);
   l.onUpdate(function() {
     camera.position.set(this.x, this.y, this.z);
     if (during) during();
@@ -158,7 +162,7 @@ var rotateCamera = function(currentRotation, newRotation, time, during, done) {
   });
 
   var r = cameraTweens.rotation = new tweenjs.Tween(currentRotation).to(newRotation, time);
-  r.easing(tweenjs.Easing.Cubic.InOut);
+  r.easing(tweenjs.Easing.Quartic.InOut);
   r.onUpdate(function() {
     camera.rotation.set(this.x, this.y, this.z);
     if (during) during();
@@ -192,8 +196,8 @@ var goto = function(id) {
   var newPosition = new three.Vector3(...shot.location);
   var newRotation = new three.Vector3(...shot.rotation);
 
-  moveCamera(currentPosition, newPosition, TRAVEL_TIME);
-  rotateCamera(currentRotation, newRotation, TRAVEL_TIME);
+  moveCamera(currentPosition, newPosition, GOTO_TIME);
+  rotateCamera(currentRotation, newRotation, GOTO_TIME);
 
 };
 
@@ -202,48 +206,66 @@ var tour = function() {
   var point = current;
 
   var currentPosition = camera.position.clone();
-  var newPosition = point.hole.position.clone();
-  newPosition.y += 100;
-  newPosition.x += 50;
-  newPosition.z += 50;
+  var hopPosition = camera.position.clone();
+  hopPosition.y += DRONE_HEIGHT;
 
+  var newPosition = point.hole.position.clone();
+  newPosition.y += 130;
+  newPosition.x += 60;
+  newPosition.z += 60;
+
+  camera.position.set(hopPosition.x, hopPosition.y, hopPosition.z);
   var currentRotation = camera.rotation.clone();
   camera.lookAt(point.hole.position);
   var newRotation = camera.rotation.clone();
+  //slight downward tilt
+  newRotation.x -= DRONE_TILT;
+  camera.rotation.set(currentPosition.x, currentPosition.y, currentPosition.z);
   camera.rotation.set(currentRotation.x, currentRotation.y, currentRotation.z);
 
   async.series([
     (c) => {
-      rotateCamera(currentRotation, newRotation, 500, c);
-    },
-    (c) => {
-      moveCamera(currentPosition, newPosition, DRONE_TIME, () => camera.lookAt(point.hole.position), c);
-    },
-    (c) => {
-      var midpoint = new three.Vector3(
-        (point.hole.position.x + point.tee.position.x) / 2,
-        (point.hole.position.y + point.tee.position.y) / 2,
-        (point.hole.position.z + point.tee.position.z) / 2
-      );
-
-      var lifted = midpoint.clone();
-      lifted.x -= 700;
-      lifted.y += 700;
-      lifted.z += 700;
-
-      var currentPosition = camera.position.clone();
-      camera.position.set(lifted.x, lifted.y, lifted.z);
-      var currentRotation = camera.rotation.clone();
-      camera.lookAt(midpoint);
-      var newRotation = camera.rotation.clone();
-      camera.rotation.set(currentRotation.x, currentRotation.y, currentRotation.z);
-      camera.position.set(currentPosition.x, currentPosition.y, currentPosition.z);
-
       async.parallel([
-        (d) => moveCamera(currentPosition, lifted, AERIAL_TIME, d),
-        (d) => rotateCamera(currentRotation, newRotation, AERIAL_TIME, d)
-      ], c);
+        (d) => rotateCamera(currentRotation, newRotation, DRONE_ASCENT, d),
+        (d) => moveCamera(currentPosition, hopPosition, DRONE_ASCENT, d)
+      ], c)
     },
+    (c) => {
+      var fps = DRONE_MPH * 5280 / 60 / 60;
+      var units = Math.sqrt(Math.pow(hopPosition.x - newPosition.x, 2) + Math.pow(hopPosition.z - newPosition.z, 2));
+      var distance = scale.toFeet(units);
+      var travel = distance / fps * 1000;
+      var hole = point.hole.position.clone();
+      moveCamera(hopPosition, newPosition, travel, function() {
+        camera.lookAt(hole);
+        camera.rotation.x -= DRONE_TILT;
+      }, c);
+    },
+    // (c) => {
+    //   var midpoint = new three.Vector3(
+    //     (point.hole.position.x + point.tee.position.x) / 2,
+    //     (point.hole.position.y + point.tee.position.y) / 2,
+    //     (point.hole.position.z + point.tee.position.z) / 2
+    //   );
+
+    //   var lifted = midpoint.clone();
+    //   lifted.x -= 700;
+    //   lifted.y += 700;
+    //   lifted.z += 700;
+
+    //   var currentPosition = camera.position.clone();
+    //   camera.position.set(lifted.x, lifted.y, lifted.z);
+    //   var currentRotation = camera.rotation.clone();
+    //   camera.lookAt(midpoint);
+    //   var newRotation = camera.rotation.clone();
+    //   camera.rotation.set(currentRotation.x, currentRotation.y, currentRotation.z);
+    //   camera.position.set(currentPosition.x, currentPosition.y, currentPosition.z);
+
+    //   async.parallel([
+    //     (d) => moveCamera(currentPosition, lifted, AERIAL_TIME, d),
+    //     (d) => rotateCamera(currentRotation, newRotation, AERIAL_TIME, d)
+    //   ], c);
+    // },
     (c) => {
       goto(current.data.id);
     }

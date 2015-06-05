@@ -43,13 +43,19 @@ void main() {
   vec3 modelSpace = (v_coord - u_minBounds) / (u_maxBounds - u_minBounds);
   vec4 diffuseColor = vec4(diffuse, 1.0);
 
-  vec4 texel = texture2D(u_texture, vec2(modelSpace.x, 1.0 - modelSpace.z));
+  vec2 texCoord = vec2(modelSpace.x, 1.0 - modelSpace.z);
+  //dither
+  texCoord += vec2(cos(v_coord.x * 10.0) * 0.0001, sin(v_coord.z * 10.0) * 0.0001);
+
+  vec4 texel = texture2D(u_texture, texCoord);
 
   #ifdef THREE_SHADING
   //darken texture
     texel *= 0.6;
     texel.rgb = inputToLinear(texel.rgb);
   #endif
+
+  // texel = texel + sin(v_coord.x * 500.0) * 0.01 + cos(v_coord.z * 500.0) * 0.01;
 
   diffuseColor *= texel;
   vec3 outgoingLight = vec3(0.0);
