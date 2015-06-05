@@ -5,7 +5,7 @@
 var async = require("async");
 var three = require("three");
 var tweenjs = require("tween.js");
-var scale = require("./scales");
+var util = require("./util");
 
 var scaling = 1;
 const SKY_COLOR = 0xBBCCFF;
@@ -16,12 +16,6 @@ const DRONE_TILT = Math.PI * .05;
 const DRONE_HEIGHT = 20;
 const DRONE_ASCENT = 3000;
 const DRONE_MPH = 20;
-
-var deg = (d) => d / 360 * TAU;
-
-var nextTick = window.requestAnimationFrame ? 
-  window.requestAnimationFrame.bind(window) :
-  function(f) { setTimeout(f, 10) };
 
 window.THREE = three;
 var scene = new three.Scene();
@@ -67,46 +61,12 @@ init(scene, function(terrain) {
     water.position.set(waterPosition.x, waterPosition.y + (Math.sin(counter) * 2), waterPosition.z);
     tweenjs.update();
     renderer.render(scene, camera);
-    nextTick(renderLoop);
+    util.nextTick(renderLoop);
   };
-  
-  // var elevations = []
-  
-  // Object.keys(poiMap).forEach(function(id) {
-  //   console.log(id);
-  //   if (id == "overview") return;
-  //   var point = poiMap[id];
-  //   var elevation = {};
-    
-  //   var raycaster = new three.Raycaster();
-  //   var above = point.data.hole.clone();
-  //   above.y = 1000;
-  //   raycaster.set(above, new three.Vector3(0, -1, 0));
-  //   var i = raycaster.intersectObject(terrain);
-  //   if (i[0]) {
-  //     elevation.hole = i[0].point.y;
-  //   }
-    
-  //   above = point.data.tee.clone();
-  //   above.y = 1000;
-  //   raycaster.set(above, new three.Vector3(0, -1, 0));
-  //   var i = raycaster.intersectObject(terrain);
-  //   if (i[0]) {
-  //     elevation.tee = i[0].point.y;
-  //   }
-    
-  //   elevations.push(elevation);
-  // })
-  
-  // console.table(elevations);
 
   document.body.classList.remove("loading");
   renderLoop();
   goto("overview");
-  
-  // var focus = poiMap[18].data.tee;
-  // camera.position.set(focus.x, focus.y + 600, focus.z + 10);
-  // camera.lookAt(focus);
   
 });
 
@@ -140,13 +100,13 @@ var moveCamera = function(currentPosition, newPosition, time, during, done) {
   }
 
   var l = cameraTweens.location = new tweenjs.Tween(currentPosition).to(newPosition, time);
-  l.easing(tweenjs.Easing.Quadratic.InOut);
+  l.easing(tweenjs.Easing.Sinusoidal.InOut);
   l.onUpdate(function() {
     camera.position.set(this.x, this.y, this.z);
     if (during) during();
   });
   if (done) l.onComplete(function() {
-    nextTick(() => done());
+    util.nextTick(() => done());
   });
   l.start();
 };
@@ -160,10 +120,9 @@ var rotateCamera = function(currentRotation, newRotation, time, during, done) {
 
   //normalize rotation to prevent weird shifts
   ["x", "y", "z"].forEach(function(axis) {
-    newRotation[axis] %= TAU;
-    currentRotation[axis] %= TAU;
-    // if (currentRotation[axis] > Math.PI) currentRotation[axis] -= TAU;
-    // if (newRotation[axis] > Math.PI) newRotation[axis] -= TAU;
+    // newRotation[axis] %= TAU;
+    // currentRotation[axis] %= TAU;
+    if (newRotation[axis] - currentRotation[axis] < 0) newRotation[axis] += TAU;
     if (newRotation[axis] - currentRotation[axis] >= Math.PI) {
       newRotation[axis] -= TAU;
     }
@@ -176,13 +135,17 @@ var rotateCamera = function(currentRotation, newRotation, time, during, done) {
     if (during) during();
   });
   if (done) r.onComplete(function() {
-    nextTick(() => done());
+    util.nextTick(() => done());
   });
   r.start();
 }
 
+var setTourable = function(yes) {
+  document.body.classList.toggle("tourable", yes);
+}
+
 var current = null;
-var goto = function(id) {
+var goto = function(id, noHop) {
 
   var currentPosition = camera.position.clone();
   var currentRotation = camera.rotation.clone();
@@ -205,18 +168,23 @@ var goto = function(id) {
   var newPosition = new three.Vector3(...shot.location);
   var newRotation = new three.Vector3(...shot.rotation);
 
-  if (id == "overview" || !previous) {
-    moveCamera(currentPosition, newPosition, GOTO_TIME);
+  setTourable(false);
+
+  //go directly if we're very high or going in/out of overview mode
+  if (id == "overview" || !previous || currentPosition.y > 400 || noHop) {
+    moveCamera(currentPosition, newPosition, GOTO_TIME, setTourable.bind(null, true));
     rotateCamera(currentRotation, newRotation, GOTO_TIME);
   } else {
     var lift = currentPosition.clone();
-    lift.y += 50;
+    lift.lerp(newPosition, .5);
+    lift.y = lift.y > 600 ? lift.y : lift.y + 400;
     async.series([
       (c) => {
         moveCamera(currentPosition, lift, 1000, c)
       },
       () => {
-        moveCamera(lift, newPosition, GOTO_TIME);
+        currentRotation = camera.rotation.clone();
+        moveCamera(lift, newPosition, GOTO_TIME, setTourable.bind(null, true));
         rotateCamera(currentRotation, newRotation, GOTO_TIME);
       }
     ]);
@@ -246,6 +214,8 @@ var tour = function() {
   camera.rotation.set(currentPosition.x, currentPosition.y, currentPosition.z);
   camera.rotation.set(currentRotation.x, currentRotation.y, currentRotation.z);
 
+  setTourable(false);
+
   async.series([
     (c) => {
       async.parallel([
@@ -256,7 +226,7 @@ var tour = function() {
     (c) => {
       var fps = DRONE_MPH * 5280 / 60 / 60;
       var units = Math.sqrt(Math.pow(hopPosition.x - newPosition.x, 2) + Math.pow(hopPosition.z - newPosition.z, 2));
-      var distance = scale.toFeet(units);
+      var distance = util.toFeet(units);
       var travel = distance / fps * 1000;
       var hole = point.hole.position.clone();
       moveCamera(hopPosition, newPosition, travel, function() {
@@ -264,33 +234,8 @@ var tour = function() {
         camera.rotation.x -= DRONE_TILT;
       }, c);
     },
-    // (c) => {
-    //   var midpoint = new three.Vector3(
-    //     (point.hole.position.x + point.tee.position.x) / 2,
-    //     (point.hole.position.y + point.tee.position.y) / 2,
-    //     (point.hole.position.z + point.tee.position.z) / 2
-    //   );
-
-    //   var lifted = midpoint.clone();
-    //   lifted.x -= 700;
-    //   lifted.y += 700;
-    //   lifted.z += 700;
-
-    //   var currentPosition = camera.position.clone();
-    //   camera.position.set(lifted.x, lifted.y, lifted.z);
-    //   var currentRotation = camera.rotation.clone();
-    //   camera.lookAt(midpoint);
-    //   var newRotation = camera.rotation.clone();
-    //   camera.rotation.set(currentRotation.x, currentRotation.y, currentRotation.z);
-    //   camera.position.set(currentPosition.x, currentPosition.y, currentPosition.z);
-
-    //   async.parallel([
-    //     (d) => moveCamera(currentPosition, lifted, AERIAL_TIME, d),
-    //     (d) => rotateCamera(currentRotation, newRotation, AERIAL_TIME, d)
-    //   ], c);
-    // },
     (c) => {
-      goto(current.data.id);
+      goto(current.data.id, true);
     }
   ], function(err) {
     console.log(arguments);
@@ -302,9 +247,10 @@ var tour = function() {
 document.body.addEventListener("click", function(e) {
   if (e.target.classList.contains("go-to")) {
     document.querySelector("nav .selected").classList.remove("selected");
-    e.target.classList.add("selected");
+    util.closest(e.target, ".hole-button").classList.add("selected");
 
     var id = e.target.getAttribute("data-link");
+    if (current && current.data.id == id) return;
     goto(id);
   }
   if (e.target.classList.contains("tour")) {

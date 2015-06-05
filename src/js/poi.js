@@ -1,10 +1,6 @@
-var deg = function(r) {
-  if (r < 0) r += 360;
-  return Math.PI * 2 * (r / 360);
-};
+var deg = require("./util").deg;
 
 //scale looks to be about 3.25units/ft
-
 
 module.exports = {
   overview: {
@@ -33,7 +29,7 @@ module.exports = {
       hole: [-970, 67.174, -1370],
       tee: [-790, 77.127, -820],
       camera: {
-        location: [-790, 81, -800],
+        location: [-790, 81, -810],
         rotation: [0, deg(12), 0]
       }
     }, {

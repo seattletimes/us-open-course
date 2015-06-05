@@ -10,7 +10,7 @@
 nav {
   padding: 4px 0;
 
-  a {
+  .hole-button {
     display: inline-block;
     padding: 0 4px;
     border-radius: 4px;
@@ -19,9 +19,24 @@ nav {
       background: #EEE;
     }
 
+    .tour {
+      max-width: 0px;
+      display: inline-block;
+      vertical-align: bottom;
+      overflow: hidden;
+      white-space: pre;
+      transition: max-width .2s ease-in-out;
+    }
+
     &.selected {
       background: #888;
-      color: white;
+      a {
+        color: white;
+      }
+
+      .tourable & .tour {
+        max-width: 200px;
+      }
     }
   }
 }

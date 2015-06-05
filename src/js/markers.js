@@ -1,11 +1,11 @@
 var three = require("three");
 var poiList = require("./poi");
 
-var scale = require("./scales");
+var util = require("./util");
 
 module.exports = function(scene) {
   //set up remains of the scene
-  var sphere = new three.SphereGeometry(scale.inInches(.84), 16, 16);
+  var sphere = new three.SphereGeometry(util.inInches(.84), 16, 16);
   var white = new three.MeshLambertMaterial({
     color: 0x888888,
     emissive: 0x888888
@@ -29,7 +29,7 @@ module.exports = function(scene) {
     scene.add(ball);
 
     var hole = new three.Mesh(flag, red);
-    var resize = scale.inFeet(7) / 10;
+    var resize = util.inFeet(7) / 10;
     hole.scale.set(resize, resize, resize);
     hole.position.set(point.hole.x, point.hole.y + .25, point.hole.z);
     hole.rotation.set(0, Math.PI * Math.random(), 0);
