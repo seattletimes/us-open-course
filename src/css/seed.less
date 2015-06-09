@@ -7,8 +7,29 @@
 
 @import "seattletimes";
 
+html, body {
+  color: white;
+  background: #333;
+}
+
+a {
+  color: @df-light-gray;
+  transition: none;
+
+  &:hover {
+    color: @df-off-white;
+  }
+}
+
+main.three-d {
+  max-width: 100%;
+  width: 1024px;
+  margin: auto;
+}
+
 nav {
   padding: 4px 0;
+  text-align: center;
 
   .hole-button {
     display: inline-block;
@@ -17,25 +38,16 @@ nav {
 
     &:hover {
       background: #EEE;
-    }
 
-    .tour {
-      max-width: 0px;
-      display: inline-block;
-      vertical-align: bottom;
-      overflow: hidden;
-      white-space: pre;
-      transition: max-width .2s ease-in-out;
+      a {
+        color: black;
+      }
     }
 
     &.selected {
       background: #888;
       a {
         color: white;
-      }
-
-      .tourable & .tour {
-        max-width: 200px;
       }
     }
   }
@@ -66,9 +78,6 @@ nav {
 }
 
 .aspect-outer {
-  max-width: 100%;
-  width: 1000px;
-  margin: auto;
 
   .aspect-inner {
     height: 0;
@@ -84,6 +93,36 @@ nav {
       height: 100%;
       max-height: 100%;
       background: black;
+    }
+
+    .details {
+      display: none;
+      background: rgba(0, 0, 0, .8);
+      color: white;
+      padding: 8px;
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 200px;
+      font-size: 14px;
+
+      h2 {
+        color: white;
+        font-size: 16px;
+        margin: 0;
+      }
+
+      .show-details & {
+        display: block;
+      }
+
+      .tour {
+        display: none;
+
+        .tourable & {
+          display: block;
+        }
+      }
     }
   }
 }

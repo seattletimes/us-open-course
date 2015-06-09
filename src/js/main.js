@@ -3,9 +3,22 @@
 // require("./lib/ads");
 
 var async = require("async");
+var dot = require("dot");
 var three = require("three");
 var tweenjs = require("tween.js");
 var util = require("./util");
+
+dot.templateSettings.varname = "data";
+dot.templateSettings.selfcontained = true;
+dot.templateSettings.evaluate = /<%([\s\S]+?)%>/g;
+dot.templateSettings.interpolate = /<%=([\s\S]+?)%>/g;
+
+var holeDetail = dot.compile(require("./_holeDescription.html"));
+
+var caddyInfo = {};
+window.courseData.forEach(function(row) {
+  caddyInfo[row.hole] = row;
+});
 
 var scaling = 1;
 const SKY_COLOR = 0xBBCCFF;
@@ -157,6 +170,7 @@ var goto = function(id, noHop) {
     //hide arrow
     focusArrow.visible = false;
     current = null;
+    document.body.classList.remove("show-details");
   } else {
     var point = poiMap[id];
     shot = point.data.camera;
@@ -164,6 +178,9 @@ var goto = function(id, noHop) {
     //move arrow over point
     focusArrow.position.set(point.hole.position.x, point.hole.position.y + 120, point.hole.position.z);
     focusArrow.visible = true;
+    document.body.classList.add("show-details");
+    var info = caddyInfo[id];
+    document.querySelector(".details").innerHTML = holeDetail(info);
   }
   var newPosition = new three.Vector3(...shot.location);
   var newRotation = new three.Vector3(...shot.rotation);
