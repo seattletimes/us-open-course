@@ -8,7 +8,7 @@ module.exports = function(scene) {
   var sphere = new three.SphereGeometry(util.inInches(.84), 16, 16);
   var white = new three.MeshLambertMaterial({
     color: 0x888888,
-    emissive: 0x888888
+    emissive: 0x444444
   });
   var flag = require("./flag");
   var red = new three.MeshLambertMaterial({

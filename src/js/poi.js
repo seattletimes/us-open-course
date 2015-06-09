@@ -1,11 +1,12 @@
 var deg = require("./util").deg;
 
 //scale looks to be about 3.25units/ft
+//6' viewpoint is ~19 units
 
 module.exports = {
   overview: {
-    location: [-2300, 800, -1000],
-    rotation: [deg(-30), deg(-90), 0]
+    location: [-2700, 1200, -750],
+    rotation: [deg(-35), deg(-97), 0]
   },
   course: [
     {
@@ -13,8 +14,8 @@ module.exports = {
       hole: [-1260, 54.392, 760],
       tee: [460, 89.97, 1260],
       camera: {
-        location: [461, 95, 1270],
-        rotation: [0, deg(52), 0]
+        location: [490, 100, 1274],
+        rotation: [deg(-15), deg(52), 0]
       }
     }, {
       id: 2, //3.55
@@ -29,7 +30,7 @@ module.exports = {
       hole: [-970, 67.174, -1370],
       tee: [-790, 77.127, -820],
       camera: {
-        location: [-790, 81, -810],
+        location: [-790, 88, -800],
         rotation: [0, deg(12), 0]
       }
     }, {
@@ -45,15 +46,15 @@ module.exports = {
       hole: [-140, 111.6, -1380],
       tee: [1330, 188.945, -820],
       camera: {
-        location: [1350, 200, -800],
-        rotation: [0, deg(90), 0]
+        location: [1350, 200, -820],
+        rotation: [deg(-15), deg(90), 0]
       }
     }, {
       id: 6, //3.36
       hole: [-175, 89.052, 120],
       tee: [-330, 106.365, -1540],
       camera: {
-        location: [-330, 116, -1580],
+        location: [-330, 116, -1560],
         rotation: [0, deg(-170), 0]
       }
     }, {
@@ -62,15 +63,15 @@ module.exports = {
       tee: [0, 77.709, 100],
       camera: {
         location: [-20, 86, 110],
-        rotation: [0, deg(-75), 0]
+        rotation: [0, deg(-45), 0]
       }
     }, {
       id: 8, //3.17
       hole: [1370, 200.301, 1780],
       tee: [1350, 167.283, -170],
       camera: {
-        location: [1300, 180, -220],
-        rotation: [0, deg(190), 0]
+        location: [1340, 180, -190],
+        rotation: [deg(-15), deg(175), 0]
       }
     }, {
       id: 9,
@@ -86,30 +87,30 @@ module.exports = {
       tee: [420, 85.893, 1040],
       camera: {
         location: [440, 96, 1040],
-        rotation: [0, deg(80), 0]
+        rotation: [0, deg(60), 0]
       }
     }, {
       id: 11,
       hole: [-560, 76.8, -1500],
       tee: [-680, 83.387, 140],
       camera: {
-        location: [-670, 93, 160],
-        rotation: [0, deg(10), 0]
+        location: [-680, 93, 160],
+        rotation: [deg(-15), deg(-10), 0]
       }
     }, {
       id: 12,
       hole: [-180, 162.873, -2710],
       tee: [-590, 105.927, -1740],
       camera: {
-        location: [-600, 116, -1700],
-        rotation: [0, deg(-20), 0]
+        location: [-610, 116, -1720],
+        rotation: [0, deg(-30), 0]
       }
     }, {
       id: 13,
       hole: [1510, 229.394, -1880],
       tee: [40, 193.577, -2680],
       camera: {
-        location: [0, 220, -2700],
+        location: [20, 215, -2700],
         rotation: [deg(-15), deg(-110), 0]
       }
     }, {
@@ -125,8 +126,8 @@ module.exports = {
       hole: [-1060, 55.797, -1630],
       tee: [-810, 81.428, -1870],
       camera: {
-        location: [-810, 91, -1900],
-        rotation: [0, deg(160), 0]
+        location: [-810, 100, -1900],
+        rotation: [deg(-15), deg(140), 0]
       }
     }, {
       id: 16,

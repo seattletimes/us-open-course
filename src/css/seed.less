@@ -31,24 +31,19 @@ nav {
   padding: 4px 0;
   text-align: center;
 
-  .hole-button {
+  a {
     display: inline-block;
     padding: 0 4px;
     border-radius: 4px;
 
     &:hover {
       background: #EEE;
-
-      a {
-        color: black;
-      }
+      color: black;
     }
 
     &.selected {
       background: #888;
-      a {
-        color: white;
-      }
+      color: white;
     }
   }
 }
@@ -78,6 +73,7 @@ nav {
 }
 
 .aspect-outer {
+  position: relative;
 
   .aspect-inner {
     height: 0;
@@ -94,35 +90,43 @@ nav {
       max-height: 100%;
       background: black;
     }
+  }
+}
 
-    .details {
-      display: none;
-      background: rgba(0, 0, 0, .8);
-      color: white;
-      padding: 8px;
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      width: 200px;
-      font-size: 14px;
+.details {
+  display: none;
+  background: rgba(0, 0, 0, .8);
+  color: white;
+  padding: 8px;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 200px;
+  font-size: 12px;
 
-      h2 {
-        color: white;
-        font-size: 16px;
-        margin: 0;
-      }
+  @media @tablet {
+    display: block;
+    position: static;
+    width: auto;
+  }
 
-      .show-details & {
-        display: block;
-      }
+  h2 {
+    color: white;
+    font-size: 16px;
+    margin: 0;
+  }
 
-      .tour {
-        display: none;
+  .show-details & {
+    display: block;
+  }
 
-        .tourable & {
-          display: block;
-        }
-      }
+  .tour.button {
+    display: none;
+    float: right;
+    font-size: 20px;
+
+    .tourable & {
+      display: block;
     }
   }
 }

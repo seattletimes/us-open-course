@@ -4,27 +4,24 @@
     <title><%= json.project.title %></title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <%= t.include("partials/_adHead.html") %>
   </head>
   <body>
 
     <main class="three-d">
       <nav>
-        <span class="hole-button selected">
-          <a href="javascript:;" class="go-to" data-link="overview">Overview</a>
-        </span>
+        <a href="javascript:;" class="go-to selected" data-link="overview">Overview</a>
         <% for (var i = 1; i <= 18; i++) { %>
-        <span class="hole-button">
-          <a href="javascript:;" class="go-to" data-link="<%= i %>"><%= i %></a>
-        </span>
+        <a href="javascript:;" class="go-to" data-link="<%= i %>"><%= i %></a>
         <% } %>
       </nav>
       <div class="aspect-outer">
         <div class="aspect-inner render-container">
           <canvas class="renderer"></canvas>
-          <div class="details"></div>
         </div>
+        <div class="details"></div>
       </div>
     </main>
 

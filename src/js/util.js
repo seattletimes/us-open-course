@@ -9,6 +9,7 @@ module.exports = {
       if (from[matches](selector)) return from;
       from = from.parentElement;
     }
+    return null;
   },
   nextTick: window.requestAnimationFrame ? 
     window.requestAnimationFrame.bind(window) :

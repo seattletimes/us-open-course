@@ -45,7 +45,7 @@ var onResize = () => renderer.setSize(canvas.offsetWidth * scaling, canvas.offse
 window.addEventListener("resize", onResize);
 onResize();
 
-var camera = new three.PerspectiveCamera(80, 16 / 9, 0.1, 100000);
+var camera = new three.PerspectiveCamera(60, 16 / 9, 0.1, 100000);
 camera.position.set(-2000, 1000, -1000);
 camera.rotation.set(0, 0, 0);
 camera.rotation.order = "YXZ";
@@ -264,13 +264,13 @@ var tour = function() {
 document.body.addEventListener("click", function(e) {
   if (e.target.classList.contains("go-to")) {
     document.querySelector("nav .selected").classList.remove("selected");
-    util.closest(e.target, ".hole-button").classList.add("selected");
+    e.target.classList.add("selected");
 
     var id = e.target.getAttribute("data-link");
     if (current && current.data.id == id) return;
     goto(id);
   }
-  if (e.target.classList.contains("tour")) {
+  if (util.closest(e.target, ".tour")) {
     tour();
   }
 });
