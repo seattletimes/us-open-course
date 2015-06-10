@@ -2,9 +2,12 @@
 require("./lib/social");
 require("./lib/ads");
 
-// load the 3D code
-require("./scene");
+var dot = require("./dot");
 
+// load the 3D code
+require("./3D");
+
+//handle fullscreen toggle
 var fullscreen = false;
 var requestFullscreen = "webkitRequestFullscreen" in document.body ? "webkitRequestFullscreen" :
   "msRequestFullscreen" in document.body ? "msRequestFullscreen" :
@@ -14,7 +17,6 @@ var exitFullscreen = "webkitExitFullscreen" in document ? "webkitExitFullscreen"
   "msExitFullscreen" in document ? "msExitFullscreen" :
   "mozCancelFullScreen" in document ? "mozCancelFullScreen" :
   "exitFullscreen";
-console.log(exitFullscreen);
 document.querySelector(".toggle-fullscreen").addEventListener("click", function() {
   if (fullscreen) {
     document[exitFullscreen]();
@@ -23,4 +25,11 @@ document.querySelector(".toggle-fullscreen").addEventListener("click", function(
   }
   fullscreen = !fullscreen;
   document.body.classList.toggle("fullscreened", fullscreen);
+});
+
+//lightboxes
+document.body.addEventListener("click", function(e) {
+  if (!e.target.classList.contains("lightbox")) {
+
+  }
 });

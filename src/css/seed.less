@@ -109,7 +109,7 @@ nav.course-nav {
 .toggle-fullscreen {
   position: absolute;
   top: 4px;
-  right: 4px;
+  left: 4px;
   color: black;
   z-index: 999;
   font-size: 16px;
@@ -144,6 +144,11 @@ nav.course-nav {
   right: 20px;
   width: 200px;
   font-size: 12px;
+  transition: opacity 1s linear;
+
+  .touring & {
+    opacity: 0;
+  }
 
   @media @tablet {
     display: block;
@@ -162,13 +167,33 @@ nav.course-nav {
   }
 
   .tour.button {
-    display: none;
-    float: right;
+    display: block;
+    max-height: 0;
     font-size: 20px;
+    transition: max-height .2s ease-in-out;
+    color: black;
+    font-family: @df-sans;
+    font-size: 14px;
+    text-align: center;
+    background: @df-middle-gray;
+    cursor: pointer;
+    margin: 8px 0;
+    text-transform: uppercase;
+    overflow: hidden;
+
+    &:hover {
+      background: @df-light-gray;
+    }
 
     .tourable & {
-      display: block;
+      max-height: 50px;
     }
+  }
+
+  .thumbnail {
+    display: block;
+    margin: auto;
+    max-width: 100%;
   }
 }
 

@@ -85,8 +85,7 @@ nav.main-nav {
     vertical-align: middle;
 
     img {
-      width: 310px;
-      height: 70px;
+      height: 40px;
       max-height: 100%;
 
       @media @tablet {
@@ -98,7 +97,9 @@ nav.main-nav {
 
   .share {
     position: absolute;
-    top: 20px;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
     right: 10px;
 
     @media @tablet {

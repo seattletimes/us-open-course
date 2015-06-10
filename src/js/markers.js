@@ -23,6 +23,9 @@ module.exports = function(scene) {
   poiList.course.forEach(function(point) {
     point.hole = new three.Vector3(...point.hole);
     point.tee = new three.Vector3(...point.tee);
+    if (point.camera.tour) {
+      point.camera.tour = point.camera.tour.map(p => new three.Vector3(p[0], p[1], p[2]));
+    }
 
     var ball = new three.Mesh(sphere, white);
     ball.position.set(point.tee.x, point.tee.y + 2, point.tee.z);

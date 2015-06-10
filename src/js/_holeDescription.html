@@ -1,7 +1,13 @@
-<a href="javascript:;" class="tour button" title="Aerial tour"><i class="fa fa-plane"></i></a>
-
 <h2>Hole #<%= data.hole %></h2>
 
 <p><b>Par <%= data.par %>, <%= data.length %></b>
 
-<p><%= data.description %>
+<p><b>From the caddy:</b> <%= data.description %>
+
+<a class="tour button">Tour this hole</a>
+
+<% if (data.photo) { %>
+<a href="./assets/photos/<%= data.photo %>" class="lightbox">
+  <img class="thumbnail" src="./assets/photos/thumbs/<%= data.photo %>">
+</a>
+<% } %>
