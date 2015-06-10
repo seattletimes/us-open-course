@@ -6,18 +6,21 @@
 }
 
 @import "seattletimes";
+@import "flexbox";
+
+@import "details";
+@import "photos";
 
 html, body {
-  color: white;
-  background: #333;
+
 }
 
 a {
-  color: @df-light-gray;
+  color: @df-dark-gray;
   transition: none;
 
   &:hover {
-    color: @df-off-white;
+    color: @df-light-gray;
   }
 }
 
@@ -108,12 +111,14 @@ nav.course-nav {
 
 .toggle-fullscreen {
   position: absolute;
-  top: 4px;
-  left: 4px;
+  top: 0;
+  left: 0;
   color: black;
   z-index: 999;
   font-size: 16px;
   cursor: pointer;
+  background: rgba(255, 255, 255, .5);
+  padding: 4px;
 
   .fa-expand {
     display: block;
@@ -134,69 +139,6 @@ nav.course-nav {
   }
 }
 
-.details {
-  display: none;
-  background: rgba(0, 0, 0, .8);
-  color: white;
-  padding: 8px;
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  width: 200px;
-  font-size: 12px;
-  transition: opacity 1s linear;
-
-  .touring & {
-    opacity: 0;
-  }
-
-  @media @tablet {
-    display: block;
-    position: static;
-    width: auto;
-  }
-
-  h2 {
-    color: white;
-    font-size: 16px;
-    margin: 0;
-  }
-
-  .show-details & {
-    display: block;
-  }
-
-  .tour.button {
-    display: block;
-    max-height: 0;
-    font-size: 20px;
-    transition: max-height .2s ease-in-out;
-    color: black;
-    font-family: @df-sans;
-    font-size: 14px;
-    text-align: center;
-    background: @df-middle-gray;
-    cursor: pointer;
-    margin: 8px 0;
-    text-transform: uppercase;
-    overflow: hidden;
-
-    &:hover {
-      background: @df-light-gray;
-    }
-
-    .tourable & {
-      max-height: 50px;
-    }
-  }
-
-  .thumbnail {
-    display: block;
-    margin: auto;
-    max-width: 100%;
-  }
-}
-
 .source {
   font-size: 12px;
   font-family: @df-sans;
@@ -207,4 +149,54 @@ cite.credits {
   float: right;
   font-style: normal;
   font-family: @df-sans;
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 99999;
+  background: rgba(255, 255, 255, .3);
+
+  &.show {
+    display: block;
+  }
+
+  .modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translateY(-50%) translateX(-50%);
+    transform: translateY(-50%) translateX(-50%);
+    max-width: 100%;
+    width: 700px;
+  }
+
+  .close-overlay {
+    color: black;
+    font-weight: bold;
+    font-size: 30px;
+    display: block;
+    text-align: right;
+    cursor: pointer;
+  }
+
+  .video-outer {
+
+    .video-inner {
+      padding-bottom: 57.6%;
+      position: relative;
+
+      iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
 }

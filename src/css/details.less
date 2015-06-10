@@ -1,0 +1,120 @@
+.details {
+  display: none;
+  background: rgba(255, 255, 255, .9);
+  padding: 8px;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 250px;
+  font-size: 14px;
+  transition: opacity 1s linear;
+
+  @media @tablet {
+    .content {
+      .display-flex;
+      .flex-direction(row);
+    }
+
+    .caddy {
+      .flex(1);
+    }
+
+    .media {
+      .flex(1);
+    }
+  }
+
+  h1, h2, h3 {
+    margin: 0;
+  }
+
+  h1 {
+    font-size: 28px;
+  }
+
+  h2 {
+    font-size: 22px;
+  }
+
+  h3 {
+    font-size: 18px;
+    font-family: @df-sans;
+    font-weight: normal;
+  }
+
+  hr {
+    border: 3px solid rgb(255, 180, 0);
+    margin-top: 10px;
+  }
+
+  p {
+    font-family: @df-sans;
+    margin: .5em 0;
+  }
+
+  .touring & {
+    opacity: 0;
+  }
+
+  @media @tablet {
+    display: block;
+    position: static;
+    width: auto;
+  }
+
+  .show-details & {
+    display: block;
+  }
+
+  .button {
+    display: block;
+    font-size: 20px;
+    transition: max-height .2s ease-in-out, background .1s linear;
+    color: black;
+    font-family: @df-serif;
+    font-size: 14px;
+    text-align: center;
+    background: rgb(255, 180, 0);
+    cursor: pointer;
+    margin: 8px 0;
+    // text-transform: uppercase;
+    overflow: hidden;
+    font-weight: bold;
+    font-size: 22px;
+
+    &:hover {
+      background: @df-goldenrod;
+    }
+  }
+
+  .tour.button {
+    max-height: 0;
+
+    .tourable & {
+      max-height: 50px;
+    }
+  }
+
+  .video-thumbnail {
+    display: block;
+    margin: auto;
+    width: 100%;
+    position: relative;
+    cursor: pointer;
+
+    .play-icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      color: @df-off-white;
+      font-size: 40px;
+      -webkit-transform: translateX(-50%) translateY(-50%);
+      transform: translateX(-50%) translateY(-50%);
+      transition: color .2s linear;
+    }
+
+    &:hover .fa-play {
+      color: @df-light-gray;
+    }
+  }
+}

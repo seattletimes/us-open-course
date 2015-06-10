@@ -10,15 +10,17 @@
   </head>
   <body>
 
-    <section class="df-header">
-      <%= t.include("partials/_dfHeader.html") %>
-    </section>
-
     <div class="ad-container top">
       <%= t.include("partials/_ad.html", { type: "banner" }) %>
     </div>
 
+    <section class="df-header">
+      <%= t.include("partials/_dfHeader.html") %>
+    </section>
+
     <main class="container">
+
+      <h1>Tour de Course</h1>
 
       <section class="three-d">
         <nav class="course-nav">
@@ -36,6 +38,7 @@
             <canvas class="renderer"></canvas>
           </div>
           <div class="details"></div>
+          <div class="photos"></div>
         </div>
       </section>
       <cite class="credits">
@@ -54,6 +57,10 @@
       </section>
 
     </main>
+
+    <div class="overlay">
+      <div class="modal"></div>
+    </div>
 
     <script>
 window.courseData = <%= JSON.stringify(csv.course) %>

@@ -1,4 +1,5 @@
 var three = require("three");
+var treeMesh = require("./tree");
 
 module.exports = function(scene) {
   var ambience = new three.AmbientLight(0x404040);
@@ -36,4 +37,11 @@ module.exports = function(scene) {
   water.rotation.set(-Math.PI * .5, 0, 0);
   water.position.set(-1650, 10, -700);
   scene.add(water);
+
+  //add the lone fir 
+  var tree = new three.Mesh(treeMesh, new three.MeshPhongMaterial({
+    color: 0x00FF00
+  }));
+  scene.add(tree);
+  tree.position.set(-1060, 56, -2220);
 };

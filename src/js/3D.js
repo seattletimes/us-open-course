@@ -9,9 +9,11 @@ const DRONE_TILT = Math.PI * .05;
 const DRONE_HEIGHT = 20;
 const DRONE_ASCENT = 3000;
 const DRONE_MPH = 20;
-const GOTO_TIME = 2000;
+const GOTO_TIME = 4000;
+const START_POSITION = 9;
 
 var holeDetail = dot.compile(require("./_holeDescription.html"));
+var holePhotos = dot.compile(require("./_holePhotos.html"));
 
 var caddyInfo = {};
 window.courseData.forEach(function(row) {
@@ -52,7 +54,7 @@ init(scene, function(terrain) {
 
   document.body.classList.remove("loading");
   renderLoop();
-  goto("overview");
+  goto(START_POSITION);
   
 });
 
@@ -63,14 +65,14 @@ var focusArrow = new three.Mesh(arrow, new three.MeshBasicMaterial({
   transparent: true
 }));
 scene.add(focusArrow);
-focusArrow.scale.set(20, 20, 20);
+focusArrow.scale.set(8, 8, 8);
 focusArrow.visible = false;
 var cycle = new tweenjs.Tween({ alpha: .8 }).to({ alpha: .3 }, 700);
 cycle.repeat(Infinity).yoyo(true);
 cycle.onUpdate(function() {
   focusArrow.material.opacity = this.alpha;
 });
-cycle.start();
+// cycle.start();
 
 var director = require("./director");
 
@@ -101,11 +103,12 @@ var goto = function(id, noHop) {
     shot = point.data.camera;
     current = point;
     //move arrow over point
-    focusArrow.position.set(point.hole.position.x, point.hole.position.y + 120, point.hole.position.z);
+    focusArrow.position.set(point.hole.position.x, point.hole.position.y + util.inFeet(30), point.hole.position.z);
     focusArrow.visible = true;
     document.body.classList.add("show-details");
     var info = caddyInfo[id];
     document.querySelector(".details").innerHTML = holeDetail(info);
+    document.querySelector(".photos").innerHTML = holePhotos(info);
   }
   var newPosition = new three.Vector3(...shot.location);
   var newRotation = new three.Vector3(...shot.rotation);
@@ -138,6 +141,7 @@ var goto = function(id, noHop) {
 var tour = function() {
   if (!current) return;
   var point = current;
+  focusArrow.visible = false;
 
   var currentPosition = camera.position.clone();
   var hopPosition = camera.position.clone();

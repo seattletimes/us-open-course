@@ -1,13 +1,25 @@
-<h2>Hole #<%= data.hole %></h2>
+<h1>Hole <%= data.hole %></h1>
 
-<p><b>Par <%= data.par %>, <%= data.length %></b>
+<h3>Par <%= data.par %> | <%= data.length %></h3>
 
-<p><b>From the caddy:</b> <%= data.description %>
+<hr class="divider"></hr>
 
-<a class="tour button">Tour this hole</a>
+<div class="content">
+  <div class="caddy">
+    <h2>Caddy talk</h2>
 
-<% if (data.photo) { %>
-<a href="./assets/photos/<%= data.photo %>" class="lightbox">
-  <img class="thumbnail" src="./assets/photos/thumbs/<%= data.photo %>">
-</a>
-<% } %>
+    <p>"<%= data.description.trim() %>"
+  </div>
+
+  <div class="media">
+
+    <% if (data.video) { %>
+    <div class="video-thumbnail" data-brightcove="<%= data.video %>">
+      <i class="fa fa-play-circle play-icon"></i>
+      <img class="video-link" src="./assets/stills/<%= data.still %>">
+    </div>
+    <% } %>
+
+    <a class="tour button">Tour this hole</a>
+  </div>
+</div>
