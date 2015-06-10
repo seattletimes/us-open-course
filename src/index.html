@@ -10,19 +10,49 @@
   </head>
   <body>
 
-    <main class="three-d">
-      <nav>
-        <a href="javascript:;" class="go-to selected" data-link="overview">Overview</a>
-        <% for (var i = 1; i <= 18; i++) { %>
-        <a href="javascript:;" class="go-to" data-link="<%= i %>"><%= i %></a>
-        <% } %>
-      </nav>
-      <div class="aspect-outer">
-        <div class="aspect-inner render-container">
-          <canvas class="renderer"></canvas>
+    <section class="df-header">
+      <%= t.include("partials/_dfHeader.html") %>
+    </section>
+
+    <div class="ad-container top">
+      <%= t.include("partials/_ad.html", { type: "banner" }) %>
+    </div>
+
+    <main class="container">
+
+      <section class="three-d">
+        <nav class="course-nav">
+          <a href="javascript:;" class="go-to selected" data-link="overview">Overview</a>
+          <% for (var i = 1; i <= 18; i++) { %>
+          <a href="javascript:;" class="go-to" data-link="<%= i %>"><%= i %></a>
+          <% } %>
+        </nav>
+        <div class="aspect-outer">
+          <a href="javascript:;" class="toggle-fullscreen">
+            <i class="fa fa-expand"></i>
+            <i class="fa fa-compress"></i>
+          </a>
+          <div class="aspect-inner render-container">
+            <canvas class="renderer"></canvas>
+          </div>
+          <div class="details"></div>
         </div>
-        <div class="details"></div>
+      </section>
+      <cite class="credits">
+        THOMAS WILBURN / THE SEATTLE TIMES
+      </cite>
+      <div class="source">
+        Elevation data: Robert Trent Jones II, LLC
       </div>
+
+      <aside class="how-we-did-it">
+
+      </aside>
+
+      <section class="related-stories">
+
+      </section>
+
     </main>
 
     <script>
