@@ -10,7 +10,7 @@ const DRONE_HEIGHT = 20;
 const DRONE_ASCENT = 3000;
 const DRONE_MPH = 20;
 const GOTO_TIME = 4000;
-const START_POSITION = 9;
+const START_POSITION = "overview";
 
 var holeDetail = dot.compile(require("./_holeDescription.html"));
 var holePhotos = dot.compile(require("./_holePhotos.html"));

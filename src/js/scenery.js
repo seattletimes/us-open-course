@@ -39,9 +39,10 @@ module.exports = function(scene) {
   scene.add(water);
 
   //add the lone fir 
-  var tree = new three.Mesh(treeMesh, new three.MeshPhongMaterial({
-    color: 0x00FF00
+  var tree = new three.Mesh(treeMesh, new three.MeshLambertMaterial({
+    color: 0x002211,
+    emissive: 0x003300
   }));
   scene.add(tree);
-  tree.position.set(-1060, 56, -2220);
+  tree.position.set(-1250, 56, -1400);
 };
