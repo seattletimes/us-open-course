@@ -18,6 +18,7 @@ var exitFullscreen = "webkitExitFullscreen" in document ? "webkitExitFullscreen"
   "msExitFullscreen" in document ? "msExitFullscreen" :
   "mozCancelFullScreen" in document ? "mozCancelFullScreen" :
   "exitFullscreen";
+
 document.querySelector(".toggle-fullscreen").addEventListener("click", function() {
   if (fullscreen) {
     document[exitFullscreen]();
@@ -47,7 +48,7 @@ document.body.addEventListener("click", function(e) {
   if (target) {
     e.preventDefault();
     overlay.classList.add("show");
-    modal.innerHTML = `<img class="lightboxed" src="${target.href}">`;
+    modal.innerHTML = `<img class="close-overlay" src="${target.href}">`;
     return;
   }
 

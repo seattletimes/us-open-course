@@ -10,6 +10,7 @@
 
 @import "details";
 @import "photos";
+@import "aerials";
 
 html, body {
 
@@ -40,6 +41,13 @@ section.three-d {
   max-width: 100%;
   width: 1024px;
   margin: auto;
+  background: white;
+  .display-flex;
+  .flex-direction(column);
+
+  .fullscreened & {
+    width: 100%;
+  }
 }
 
 nav.course-nav {
@@ -90,6 +98,7 @@ nav.course-nav {
 
 .aspect-outer {
   position: relative;
+  .flex(1 1);
 
   .aspect-inner {
     height: 0;
@@ -171,8 +180,8 @@ cite.credits {
     left: 50%;
     -webkit-transform: translateY(-50%) translateX(-50%);
     transform: translateY(-50%) translateX(-50%);
-    max-width: 100%;
-    width: 700px;
+    max-width: 90%;
+    width: 1200px;
   }
 
   .close-overlay {

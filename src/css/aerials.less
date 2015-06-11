@@ -1,0 +1,18 @@
+@import "flexbox";
+
+.aerial-photos {
+  .display-flex;
+  overflow: hidden;
+
+  a.lightbox {
+    display: block;
+    overflow: hidden;
+    padding: 4px;
+    .flex(1 1 100% / 6);
+    .justify-content(center);
+
+    img {
+      display: block;
+    }
+  }
+}

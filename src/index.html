@@ -22,6 +22,13 @@
 
       <h1>Tour de Course</h1>
 
+      <p class="credits">
+        By Thomas Wilburn and Garland Potts
+
+      <p class="chatter">
+        With its wild elevation changes, fescue grass, and (nearly) treeless landscape, Chambers Bay will offer golfers an entirely new experience from any previous U.S. Open when it hosts the tournament on June 18-21, 2015. Take a tour of the links-style course using our 3D walkthrough, including videos from U.S. Open Championship Directory Danny Sink and comments from Name Goes Here, a Chambers Bay caddy.
+      </p>
+
       <section class="three-d">
         <nav class="course-nav">
           <a href="javascript:;" class="go-to selected" data-link="overview">Overview</a>
@@ -40,27 +47,33 @@
           <div class="details"></div>
           <div class="photos"></div>
         </div>
+        <div class="overlay">
+          <div class="modal"></div>
+        </div>
       </section>
-      <cite class="credits">
-        THOMAS WILBURN / THE SEATTLE TIMES
-      </cite>
       <div class="source">
         Elevation data: Robert Trent Jones II, LLC
       </div>
 
+      <section class="aerial-photos">
+        <% csv.aerials.forEach(function(row) { %>
+        <a href="./assets/photos/<%= row.photo %>" class="lightbox">
+          <img src="./assets/photos/thumbs/<%= row.photo %>">
+        </a>
+        <% }); %>
+      </section>
+
       <section class="related-stories">
-
+        <h2>Related stories</h2>
+        <ul>
+        <% csv.related.forEach(function(row) { %>
+          <li> <a href="<%= row.url %>"><%= row.text %></a>
+        <% }); %>
+        </ul>
       </section>
 
-      <section class="aerial-shots">
-
-      </section>
 
     </main>
-
-    <div class="overlay">
-      <div class="modal"></div>
-    </div>
 
     <script>
 window.courseData = <%= JSON.stringify(csv.course) %>
