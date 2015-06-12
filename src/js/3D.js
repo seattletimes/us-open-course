@@ -162,8 +162,11 @@ var tour = function() {
       }
     },
     (c) => {
-      // setTouring(false); // already done by goto
-      goto(current.data.id, true);
+      setTouring(false);
+      var currentPosition = camera.position.clone();
+      var currentRotation = camera.rotation.clone();
+      director.moveCamera(currentPosition, new three.Vector3(...point.data.camera.location), 4000, c);
+      director.rotateCamera(currentRotation, new three.Vector3(...point.data.camera.rotation), 4000);
     }
   ], function(err) {
     if (err) console.log(err);
