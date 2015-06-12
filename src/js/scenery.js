@@ -19,10 +19,11 @@ module.exports = function(scene) {
     shininess: 20,
     morphTargets: true,
     transparent: true,
-    opacity: .8
+    opacity: .8,
+    // side: three.DoubleSide
   });
   var morphs = [];
-  var waveHeight = 2;
+  var waveHeight = .5;
   var waveInterval = .2
   plane.vertices.forEach(function(vertex, i) {
     vertex.z = Math.sin(i * waveInterval) * waveHeight
@@ -35,7 +36,7 @@ module.exports = function(scene) {
   var water = new three.Mesh(plane, blue);
   window.water = water;
   water.rotation.set(-Math.PI * .5, 0, 0);
-  water.position.set(-1650, 10, -700);
+  water.position.set(-1650, 8, -700);
   scene.add(water);
 
   //add the lone fir 

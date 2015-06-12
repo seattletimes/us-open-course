@@ -52,7 +52,7 @@ module.exports = function(scene, ready) {
       ]),
       fragmentShader: shaders.fragment,
       vertexShader: shaders.vertex,
-      fog: true,
+      // fog: true,
       lights: true,
       shading: three.SmoothShading
     });

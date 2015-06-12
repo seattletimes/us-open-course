@@ -6,9 +6,15 @@
   width: 100px;
   padding: 4px;
   display: none;
+  opacity: 1;
+  transition: opacity 1s linear;
 
   .show-details & {
     display: block;
+  }
+
+  .touring & {
+    opacity: 0;
   }
 
   a, img {

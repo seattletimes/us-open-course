@@ -16,6 +16,8 @@ try {
     antialias: true
   });
 
+  renderer.context.depthFunc(renderer.context.LESS);
+
   renderer.setClearColor(SKY_COLOR);
   var onResize = () => renderer.setSize(canvas.offsetWidth * SCALING, canvas.offsetHeight * SCALING, false)
   window.addEventListener("resize", onResize);

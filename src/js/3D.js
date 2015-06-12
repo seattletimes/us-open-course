@@ -200,7 +200,7 @@ module.exports = function() {
     var waterPosition = water.position.clone();
 
     var renderLoop = function() {
-      counter += .05;
+      counter += .02;
       water.morphTargetInfluences[0] = (Math.sin(counter) + 1) / 2;
       water.position.set(waterPosition.x, waterPosition.y + (Math.sin(counter) * 2), waterPosition.z);
       tweenjs.update();
