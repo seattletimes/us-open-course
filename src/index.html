@@ -75,7 +75,7 @@
 
       <section class="aerial-photos">
         <% csv.aerials.forEach(function(row) { %>
-        <a href="./assets/photos/<%= row.photo %>" class="lightbox">
+        <a href="./assets/photos/<%= row.photo %>" class="lightbox" credit="<%= row.credit %>">
           <img src="./assets/photos/thumbs/<%= row.photo %>">
         </a>
         <% }); %>
