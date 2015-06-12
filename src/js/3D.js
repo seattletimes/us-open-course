@@ -21,42 +21,15 @@ window.courseData.forEach(function(row) {
 });
 
 window.THREE = three;
+var renderer = require("./renderer");
 var scene = require("./scene");
 var camera = require("./camera");
-
-var renderer = require("./renderer");
 
 var makeScenery = require("./scenery");
 makeScenery(scene);
 
 var makeMarkers = require("./markers");
 var poiMap = makeMarkers(scene);
-
-//load data, then set up rendering
-document.body.classList.add("loading");
-var init = require("./init");
-init(scene, function(terrain) {
-
-  window.terrain = terrain;
-
-  var counter = 0;
-
-  var waterPosition = water.position.clone();
-
-  var renderLoop = function() {
-    counter += .05;
-    water.morphTargetInfluences[0] = (Math.sin(counter) + 1) / 2;
-    water.position.set(waterPosition.x, waterPosition.y + (Math.sin(counter) * 2), waterPosition.z);
-    tweenjs.update();
-    renderer.render(scene, camera);
-    util.nextTick(renderLoop);
-  };
-
-  document.body.classList.remove("loading");
-  renderLoop();
-  goto(START_POSITION);
-  
-});
 
 var arrow = require("./arrow");
 var focusArrow = new three.Mesh(arrow, new three.MeshBasicMaterial({
@@ -212,3 +185,34 @@ document.body.addEventListener("click", function(e) {
     tour();
   }
 });
+
+//export a function that starts the engine
+module.exports = function() {
+  //load data, then set up rendering
+  document.body.classList.add("loading");
+  var init = require("./init");
+  init(scene, function(terrain) {
+
+    window.terrain = terrain;
+
+    var counter = 0;
+
+    var waterPosition = water.position.clone();
+
+    var renderLoop = function() {
+      counter += .05;
+      water.morphTargetInfluences[0] = (Math.sin(counter) + 1) / 2;
+      water.position.set(waterPosition.x, waterPosition.y + (Math.sin(counter) * 2), waterPosition.z);
+      tweenjs.update();
+      renderer.render(scene, camera);
+      util.nextTick(renderLoop);
+    };
+
+    document.body.classList.remove("loading");
+    document.body.classList.add("running");
+    renderLoop();
+    goto(START_POSITION);
+  });
+
+  return true;
+};

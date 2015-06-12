@@ -5,9 +5,6 @@ require("./lib/ads");
 var dot = require("./dot");
 var util = require("./util");
 
-// load the 3D code
-require("./3D");
-
 //handle fullscreen toggle
 var fullscreen = false;
 var requestFullscreen = "webkitRequestFullscreen" in document.body ? "webkitRequestFullscreen" :
@@ -58,3 +55,15 @@ document.body.addEventListener("click", function(e) {
     modal.innerHTML = "";
   }
 });
+
+//3D engine kickoff
+var startEngine = require("./3D");
+var section = document.querySelector(".click-message");
+var play = function() {
+  if (document.body.classList.contains("no-webgl")) return;
+  section.removeEventListener("click", play);
+  section.classList.remove("click-to-play");
+  document.body.classList.remove("waiting");
+  startEngine();
+};
+section.addEventListener("click", play)

@@ -5,7 +5,7 @@ var matches = "matchesSelector" in document.body ? "matchesSelector" :
 
 module.exports = {
   closest(from, selector) {
-    while (from != document.documentElement) {
+    while (from && from != document.documentElement) {
       if (from[matches](selector)) return from;
       from = from.parentElement;
     }

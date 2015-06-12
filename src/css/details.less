@@ -3,9 +3,11 @@
   background: rgba(255, 255, 255, .9);
   padding: 8px;
   position: absolute;
-  top: 20px;
+  top: 10px;
   right: 20px;
   width: 250px;
+  max-height: calc(~"100% - 20px");
+  overflow-y: auto;
   font-size: 14px;
   transition: opacity 1s linear;
 
@@ -103,6 +105,7 @@
     cursor: pointer;
 
     .play-icon {
+      opacity: .5;
       position: absolute;
       top: 50%;
       left: 50%;

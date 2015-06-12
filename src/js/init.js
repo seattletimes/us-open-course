@@ -1,11 +1,13 @@
 var three = require("three");
 var async = require("async");
 
+var isApple = require("./isApple");
+
 module.exports = function(scene, ready) {
 
   async.parallel({
     texture: function(c) {
-      three.ImageUtils.loadTexture("./assets/dwg.jpg", null, function(tex) {
+      three.ImageUtils.loadTexture(isApple() ? "./assets/dwg-mobile.jpg" : "./assets/dwg.jpg", null, function(tex) {
         c(null, tex);
       });
     },

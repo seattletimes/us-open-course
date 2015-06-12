@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <%= t.include("partials/_adHead.html") %>
   </head>
-  <body>
+  <body class="waiting">
 
     <div class="ad-container top">
       <%= t.include("partials/_ad.html", { type: "banner" }) %>
@@ -20,37 +20,49 @@
 
     <main class="container">
 
-      <h1>Tour de Course</h1>
+      <h1><%= json.project.title %></h1>
 
       <p class="credits">
         By Thomas Wilburn and Garland Potts
 
       <p class="chatter">
-        With its wild elevation changes, fescue grass, and (nearly) treeless landscape, Chambers Bay will offer golfers an entirely new experience from any previous U.S. Open when it hosts the tournament on June 18-21, 2015. Take a tour of the links-style course using our 3D walkthrough, including videos from U.S. Open Championship Directory Danny Sink and comments from Name Goes Here, a Chambers Bay caddy.
+        With its wild elevation changes, fescue grass and (nearly) treeless landscape, Chambers Bay will offer golfers an entirely new experience from any previous U.S. Open when it hosts the tournament June 18-21, 2015. Take a tour of the links-style course using our 3-D walkthrough, including videos from U.S. Open Championship Director Danny Sink and comments from Chambers Bay caddie Dustin da Silva.
       </p>
 
-      <section class="three-d">
+      <section class="three-d click-to-play">
+        
         <nav class="course-nav">
           <a href="javascript:;" class="go-to selected" data-link="overview">Overview</a>
           <% for (var i = 1; i <= 18; i++) { %>
           <a href="javascript:;" class="go-to" data-link="<%= i %>"><%= i %></a>
           <% } %>
         </nav>
+        
         <div class="aspect-outer">
+
+          <a href="javascript:;" class="click-message">
+            <i class="fa fa-photo"></i> Click to load the course
+          </a>
+
           <a href="javascript:;" class="toggle-fullscreen" title="Toggle fullscreen mode">
             <i class="fa fa-expand"></i>
             <i class="fa fa-compress"></i>
           </a>
+
           <div class="aspect-inner render-container">
             <canvas class="renderer"></canvas>
           </div>
+
           <div class="details"></div>
           <div class="photos"></div>
+
         </div>
+        
         <div class="overlay">
           <div class="modal"></div>
         </div>
       </section>
+      
       <div class="source">
         Elevation data: Robert Trent Jones II, LLC
       </div>
@@ -76,6 +88,10 @@
     </main>
 
     <script>
+//check for IE 9
+if (navigator.userAgent.match(/msie/i)) {
+  document.body.className += " no-webgl";
+}
 window.courseData = <%= JSON.stringify(csv.course) %>
     </script>
 

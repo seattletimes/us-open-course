@@ -1,0 +1,140 @@
+nav.course-nav {
+  padding: 4px 0;
+  text-align: center;
+  font-family: @df-sans;
+  display: none;
+
+  .running & {
+    display: block;
+  }
+
+  a {
+    display: inline-block;
+    padding: 0 4px;
+    border-radius: 4px;
+
+    &:hover {
+      background: #EEE;
+      color: black;
+    }
+
+    &.selected {
+      background: #888;
+      color: white;
+    }
+  }
+}
+
+.render-container {
+  &::before {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    display: block;
+    color: black;
+    z-index: 999;
+    display: none;
+
+    .loading & {
+      display: block;
+      content: "Loading...";
+    }
+
+    .no-webgl & {
+      display: block;
+      content: "Sorry, your browser can't run this interactive. Please try a recent version of Chrome or Firefox.";
+    }
+  }
+}
+
+.aspect-outer {
+  position: relative;
+  .flex(1 1);
+
+  .click-message {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transition: color .2s linear;
+    text-align: center;
+    width: 100%;
+    display: none;
+    cursor: pointer;
+    z-index: 99999;
+    font-weight: bold;
+
+    .no-webgl & {
+      display: none !important;
+    }
+
+    &:hover {
+      color: #333;
+    }
+
+    .waiting & {
+      display: block;
+    }
+  }
+
+  .aspect-inner {
+    height: 0;
+    padding-bottom: percentage(9 / 16);
+    position: relative;
+
+    canvas.renderer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      max-width: 100%;
+      height: 100%;
+      max-height: 100%;
+    }
+  }
+}
+
+canvas.renderer {
+  opacity: 0;
+  transition: opacity 1s linear;
+
+  .running & {
+    opacity: 1;
+  }
+}
+
+.toggle-fullscreen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: black;
+  z-index: 999;
+  font-size: 16px;
+  cursor: pointer;
+  background: rgba(255, 255, 255, .5);
+  padding: 4px;
+  display: none;
+
+  .running & {
+    display: block;
+  }
+
+  .fa-expand {
+    display: block;
+  }
+
+  .fa-compress {
+    display: none;
+  }
+
+  .fullscreened & {
+    .fa-expand {
+      display: none;
+    }
+
+    .fa-compress {
+      display: block;
+    }
+  }
+}
