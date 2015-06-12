@@ -49,6 +49,18 @@ section.three-d {
     .display-flex;
     .flex-direction(column);
     width: 100%;
+    height: 100%;
+
+    .aspect-outer {
+      .display-flex;
+      .flex-direction(column);
+      .align-content(stretch);
+    }
+
+    .aspect-inner {
+      .flex(1 1);
+      padding-bottom: 40%;
+    }
   }
 }
 

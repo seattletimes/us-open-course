@@ -31,6 +31,17 @@ document.querySelector(".toggle-fullscreen").addEventListener("click", function(
   document.body.classList.toggle("fullscreened", fullscreen);
 });
 
+["mozfullscreenchange", "webkitfullscreenchange", "fullscreenchange"].forEach(ev => document.addEventListener(ev, function() {
+  var attr = "mozFullScreenElement" in document ? "mozFullScreenElement" :
+    "webkitFullscreenElement" in document ? "webkitFullscreenElement" :
+    "fullScreenElement";
+
+  if (!document[attr]) {
+    document.body.classList.remove("fullscreened");
+  }
+
+}));
+
 //media click listener
 var overlay = document.querySelector(".overlay");
 var modal = document.querySelector(".modal");
