@@ -5,13 +5,13 @@
       "path": "incomprehensible-continent"
     },
     "live": {
-      "bucket": "",
-      "path": ""
+      "bucket": "projects.seattletimes.com",
+      "path": "2015/chambers-bay"
     }
   },
-  "title": "Tour de course",
-  "description": "",
-  "url": "",
+  "title": "Touring Chambers Bay",
+  "description": "Take a spin around the course for this year's U.S. Open with our 3-D tour.",
+  "url": "http://projects.seattletimes.com/2015/chambers-bay/",
   "slug": "",
   "tags": ["sports", "golf", "chambersbay", "usopen", "interactive"],
   "production": false,

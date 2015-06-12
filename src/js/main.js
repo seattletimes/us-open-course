@@ -45,7 +45,11 @@ document.body.addEventListener("click", function(e) {
   if (target) {
     e.preventDefault();
     overlay.classList.add("show");
-    modal.innerHTML = `<img class="close-overlay" src="${target.href}">`;
+    var url = target.href;
+    var credit = target.getAttribute("credit");
+    modal.innerHTML = `
+<img class="close-overlay" src="${target.href}">
+<cite>${credit} / The Seattle Times</cite>`;
     return;
   }
 

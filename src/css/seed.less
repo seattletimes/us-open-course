@@ -17,15 +17,6 @@ html, body {
 
 }
 
-a {
-  color: @df-dark-gray;
-  transition: none;
-
-  &:hover {
-    color: @df-light-gray;
-  }
-}
-
 .ad-container {
   text-align: center;
   padding: 8px 0;
@@ -43,6 +34,15 @@ section.three-d {
   width: 1024px;
   margin: auto;
   background: white;
+  
+  a {
+    color: @df-dark-gray;
+    transition: none;
+  
+    &:hover {
+      color: @df-light-gray;
+    }
+  }
 
   .fullscreened & {
     .display-flex;
@@ -54,6 +54,10 @@ section.three-d {
 .source {
   font-size: 12px;
   font-family: @df-sans;
+  
+  .waiting & {
+    display: none;
+  }
 }
 
 cite.credits {
@@ -84,11 +88,22 @@ cite.credits {
     -webkit-transform: translateY(-50%) translateX(-50%);
     transform: translateY(-50%) translateX(-50%);
     max-width: 90%;
+    max-height: 90%;
     // width: 1200px;
     background: white;
+    padding: 8px;
+    box-shadow: 4px 4px 16px rgba(0, 0, 0, .3);
 
     img {
       margin: auto;
+    }
+    
+    cite {
+      display: block;
+      text-transform: uppercase;
+      text-align: right;
+      font-family: @df-sans;
+      font-size: 12px;
     }
   }
 
@@ -102,6 +117,8 @@ cite.credits {
   }
 
   .video-outer {
+    width: 800px;
+    max-width: 100%;
 
     .video-inner {
       padding-bottom: 57.6%;

@@ -23,10 +23,10 @@
       <h1><%= json.project.title %></h1>
 
       <p class="credits">
-        By Thomas Wilburn and Garland Potts
+        By <a href="http://www.seattletimes.com/author/thomas-wilburn/">Thomas Wilburn</a> and <a href="http://www.seattletimes.com/author/garland-potts/">Garland Potts</a>
 
       <p class="chatter">
-        With its wild elevation changes, fescue grass and (nearly) treeless landscape, Chambers Bay will offer golfers an entirely new experience from any previous U.S. Open when it hosts the tournament June 18-21, 2015. Take a tour of the links-style course using our 3-D walkthrough, including videos from U.S. Open Championship Director Danny Sink and comments from Chambers Bay caddie Dustin da Silva.
+        With its wild elevation changes, fescue grass and (nearly) treeless landscape, Chambers Bay will offer golfers an entirely new experience from any previous U.S. Open when it hosts the tournament June 18-21, 2015. Take a tour of the links-style course using our 3-D walkthrough, including videos from U.S. Open Championship Director Danny Sink and comments from Chambers Bay caddie Dustin da Silva. <a href="http://seattletimes.com/sports/golf">Read more Seattle Times golf coverage.</a>
       </p>
 
       <section class="three-d click-to-play">
@@ -74,12 +74,16 @@
         </a>
         <% }); %>
       </section>
+      
+      <div class="ad-container middle">
+        <%= t.include("partials/_ad.html", { type: "bannerBottom" }) %>
+      </div>
 
       <section class="related-stories">
         <h2>Related stories</h2>
         <ul>
         <% csv.related.forEach(function(row) { %>
-          <li> <a href="<%= row.url %>"><%= row.text %></a>
+          <li> <a href="<%= row.url %>" target="_new"><%= row.text %></a>
         <% }); %>
         </ul>
       </section>
