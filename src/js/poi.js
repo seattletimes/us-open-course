@@ -5,8 +5,8 @@ var deg = require("./util").deg;
 
 module.exports = {
   overview: {
-    location: [-2700, 1200, -750],
-    rotation: [deg(-35), deg(-97), 0]
+    location: [-2500, 600, 400],
+    rotation: [deg(-28), deg(-80), 0]
   },
   course: [
     {

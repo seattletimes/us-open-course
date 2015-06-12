@@ -199,10 +199,17 @@ module.exports = function() {
 
     var waterPosition = water.position.clone();
 
+    var tide = new tweenjs.Tween({ wave: 0 }).to({ wave: 1 }, 2000);
+    tide.easing(tweenjs.Easing.Sinusoidal.InOut);
+    tide.onUpdate(function() {
+      water.morphTargetInfluences[0] = this.wave;
+      water.position.set(waterPosition.x, waterPosition.y + this.wave, waterPosition.z);
+    });
+    tide.repeat(Infinity).yoyo(true);
+    tide.start();
+
     var renderLoop = function() {
-      counter += .02;
-      water.morphTargetInfluences[0] = (Math.sin(counter) + 1) / 2;
-      water.position.set(waterPosition.x, waterPosition.y + (Math.sin(counter) * 2), waterPosition.z);
+      counter += .05;
       tweenjs.update();
       renderer.render(scene, camera);
       util.nextTick(renderLoop);
