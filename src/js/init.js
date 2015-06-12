@@ -5,6 +5,8 @@ var isApple = require("./isApple");
 
 module.exports = function(scene, ready) {
 
+  var loadBar = document.querySelector(".load-bar");
+
   async.parallel({
     texture: function(c) {
       three.ImageUtils.loadTexture(isApple() ? "./assets/dwg-mobile.jpg" : "./assets/dwg.jpg", null, function(tex) {
@@ -15,6 +17,9 @@ module.exports = function(scene, ready) {
       var loader = new three.ObjectLoader();
       loader.load("./assets/model.json", function(mesh) {
         c(null, mesh);
+      }, function(xhr) {
+        var percent = xhr.loaded / xhr.total * 100;
+        loadBar.style.width = percent.toFixed(1) + "%";
       });
     }
   }, function(err, loaded) {

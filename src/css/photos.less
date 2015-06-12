@@ -1,3 +1,5 @@
+@import "flexbox";
+
 .photos {
   position: absolute;
   bottom: 10px;
@@ -11,6 +13,22 @@
 
   .show-details & {
     display: block;
+
+    @media @tablet {
+      position: static;
+      width: 100%;
+      .display-flex;
+      .justify-content(center);
+
+      a {
+        display: inline-block;
+        vertical-align: top;
+      }
+
+      img {
+        max-height: 200px;
+      }
+    }
   }
 
   .touring & {
@@ -20,4 +38,6 @@
   a, img {
     display: block;
   }
+
+
 }

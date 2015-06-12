@@ -10,11 +10,16 @@ var fullscreen = false;
 var requestFullscreen = "webkitRequestFullscreen" in document.body ? "webkitRequestFullscreen" :
   "msRequestFullscreen" in document.body ? "msRequestFullscreen" :
   "mozRequestFullScreen" in document.body ? "mozRequestFullScreen" : 
-  "requestFullscreen";
+  "requestFullscreen" in document.body ? "requestFullscreen" :
+  false;
 var exitFullscreen = "webkitExitFullscreen" in document ? "webkitExitFullscreen" :
   "msExitFullscreen" in document ? "msExitFullscreen" :
   "mozCancelFullScreen" in document ? "mozCancelFullScreen" :
   "exitFullscreen";
+
+if (!requestFullscreen) {
+  document.body.classList.add("no-fullscreen");
+}
 
 document.querySelector(".toggle-fullscreen").addEventListener("click", function() {
   if (fullscreen) {

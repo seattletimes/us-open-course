@@ -41,11 +41,6 @@ nav.course-nav {
     z-index: 999;
     display: none;
 
-    .loading & {
-      display: block;
-      content: "Loading...";
-    }
-
     .no-webgl & {
       display: block;
       content: "Sorry, your browser can't run this interactive. Please try a recent version of Chrome or Firefox.";
@@ -79,6 +74,35 @@ nav.course-nav {
 
     .waiting & {
       display: block;
+    }
+  }
+
+  .load-message {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transition: color .2s linear;
+    text-align: center;
+    width: 100%;
+    display: none;
+    z-index: 99999;
+
+    .loading & {
+      display: block;
+    }
+
+    .load-bar-container {
+      width: 320px;
+      max-width: 100%;
+      margin: auto;
+
+      .load-bar {
+        background: @df-blue;
+        height: 20px;
+        float: left;
+        width: 0%;
+        transition: width .1s ease-in-out;
+      }
     }
   }
 
@@ -119,6 +143,10 @@ canvas.renderer {
   background: rgba(255, 255, 255, .5);
   padding: 4px;
   display: none;
+
+  .no-fullscreen & {
+    display: none !important;
+  }
 
   .running & {
     display: block;

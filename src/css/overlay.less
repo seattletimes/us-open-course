@@ -1,0 +1,73 @@
+@import "flexbox";
+
+.overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 99999;
+  background: rgba(255, 255, 255, .3);
+
+  &.show {
+    display: block;
+  }
+
+  .modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translateX(-50%) translateY(-50%);
+    transform: translateX(-50%) translateY(-50%);
+    background: white;
+    padding: 8px;
+    box-shadow: 4px 4px 16px rgba(0, 0, 0, .3);
+    max-width: 90%;
+    max-height: 90%;
+    .display-flex;
+    .flex-direction(column);
+    .align-content(stretch);
+
+    img {
+      margin: auto;
+      .flex(1 1 100%);
+    }
+    
+    cite {
+      .flex(1);
+      display: block;
+      text-transform: uppercase;
+      text-align: right;
+      font-family: @df-sans;
+      font-size: 12px;
+    }
+  }
+
+  .close-overlay {
+    color: black;
+    font-weight: bold;
+    font-size: 30px;
+    display: block;
+    text-align: right;
+    cursor: pointer;
+  }
+
+  .video-outer {
+    width: 800px;
+    max-width: 100%;
+
+    .video-inner {
+      padding-bottom: 57.6%;
+      position: relative;
+
+      iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+}
