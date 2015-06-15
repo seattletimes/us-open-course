@@ -91,7 +91,10 @@
         <h2>Related stories</h2>
         <ul>
         <% csv.related.forEach(function(row) { %>
-          <li> <a href="<%= row.url %>" target="_new"><%= row.text %></a>
+          <li class="<%= row.image ? "has-thumb" : "" %>"> <a href="<%= row.url %>" target="_new">
+            <% if (row.image) { %><img class="thumb" src="<%= row.image %>"> <% } %>
+            <%= row.text %>
+          </a>
         <% }); %>
         </ul>
       </section>
