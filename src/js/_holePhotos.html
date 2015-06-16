@@ -4,7 +4,7 @@
 </a>
 
 <% if (data.photo) { %>
-  <a href="./assets/photos/<%= data.photo %>" class="lightbox" credit="Katie Cotterill">
+  <a href="./assets/photos/<%= data.photo %>" class="lightbox" credit="<%= data.credit %>">
     <img src="./assets/photos/thumbs/<%= data.photo %>">
   </a>
 <% } %>
