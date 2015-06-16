@@ -3,9 +3,9 @@ Build a bundled app.js file using browserify
 */
 module.exports = function(grunt) {
 
+  var babel = require("babelify");
   var browserify = require("browserify");
   var exorcist = require("exorcist");
-  var babel = require("babelify");
   var fs = require("fs");
 
   grunt.registerTask("bundle", "Build app.js using browserify", function(mode) {
@@ -14,9 +14,7 @@ module.exports = function(grunt) {
     var done = this.async();
 
     var b = browserify({ debug: mode == "dev" });
-    b.transform(babel.configure({
-      ignore: /three/
-    }));
+    b.transform(babel);
 
     //make sure build/ exists
     grunt.file.mkdir("build");
@@ -26,9 +24,13 @@ module.exports = function(grunt) {
     var assembly = b.bundle();
     if (mode == "dev") {
       //output sourcemap
-      assembly = assembly.pipe(exorcist("build/app.js.map"));
+      assembly = assembly.pipe(exorcist("./build/app.js.map", null, null, "."));
     }
     assembly.pipe(output).on("finish", function() {
+      //correct path separators in the sourcemap for some stupid reason
+      var sourcemap = grunt.file.readJSON("./build/app.js.map");
+      sourcemap.sources = sourcemap.sources.map(function(s) { return s.replace(/\\/g, "/") });
+      grunt.file.write("./build/app.js.map", JSON.stringify(sourcemap, null, 2));
       done();
     });
 
