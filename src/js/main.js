@@ -101,3 +101,15 @@ var play = function() {
   startEngine();
 };
 section.addEventListener("click", play)
+
+//single scroll track
+var oneScroll = function() {
+  if (window.dataLayer) dataLayer.push({
+    event: "analyticsEvent",
+    eventCategory: "interaction",
+    eventAction: "interactive-page-scrolled",
+    eventLabel: "chambers-bay"
+  });
+  window.removeEventListener("scroll", oneScroll);
+};
+window.addEventListener("scroll", oneScroll);

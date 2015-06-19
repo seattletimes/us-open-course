@@ -1,4 +1,4 @@
-var three = require("three");
+var three = require("three/three.min");
 
 const SKY_COLOR = 0xBBCCFF;
 const SCALING = 1;

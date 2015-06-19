@@ -1,6 +1,6 @@
 var async = require("async");
 var dot = require("./dot");
-var three = require("three");
+var three = require("three/three.min");
 var tweenjs = require("tween.js");
 var util = require("./util");
 
