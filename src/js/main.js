@@ -68,6 +68,12 @@ document.body.addEventListener("click", function(e) {
 <img class="close-overlay" src="${target.href}">
 <cite>${credit ? credit + " / The Seattle Times" : ""}</cite>
 <div class="caption">${caption || ""}</div>`;
+    if (window.dataLayer) dataLayer.push({
+      event: "analyticsEvent",
+      eventCategory: "interaction",
+      eventAction: "interactive-lightbox",
+      eventLabel: "chambers-bay"
+    });
     return;
   }
 
@@ -83,6 +89,12 @@ var startEngine = require("./3D");
 var section = document.querySelector(".click-message");
 var play = function() {
   if (document.body.classList.contains("no-webgl")) return;
+  if (window.dataLayer) dataLayer.push({
+    event: "analyticsEvent",
+    eventCategory: "interaction",
+    eventAction: "interactive-loaded",
+    eventLabel: "chambers-bay"
+  });
   section.removeEventListener("click", play);
   section.classList.remove("click-to-play");
   document.body.classList.remove("waiting");
