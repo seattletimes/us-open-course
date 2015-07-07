@@ -1,4 +1,4 @@
-var three = require("three/three.min");
+var three = require("three");
 
 var point = new three.CylinderGeometry(3, 0, 3, 0, 20);
 var tip = new three.Mesh(point);

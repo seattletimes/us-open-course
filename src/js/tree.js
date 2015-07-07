@@ -1,4 +1,4 @@
-var three = require("three/three.min");
+var three = require("three");
 var util = require("./util");
 
 var height = util.inFeet(40);

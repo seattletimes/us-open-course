@@ -1,4 +1,4 @@
-var three = require("three/three.min");
+var three = require("three");
 
 var vert = `
 //from three

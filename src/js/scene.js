@@ -1,3 +1,3 @@
-var three = require("three/three.min");
+var three = require("three");
 
 module.exports = new three.Scene();
